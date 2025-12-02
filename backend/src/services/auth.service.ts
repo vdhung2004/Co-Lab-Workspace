@@ -1,159 +1,187 @@
-import bcrypt from 'bcrypt'
-import { User, UserPublicData } from '../types/user.t';
-import jwt from 'jsonwebtoken';
-import { getUserByEmail, 
-    getUserByVerifyToken, 
-    updateUserVerificationStatus,
-    getUserPublicData } from '../repositories/user.repository';
-import { CreateUserPayload, UserRepoPayload } from '../types/user.t';
-import { createUser } from '../repositories/user.repository';
-import { generateVerifyToken, getExpirationDate } from '../utils/crypto';
-import { UserStatus } from '../../generated/prisma';
+import { prisma } from "../lib/prisma.js";
+import {
+  IRegister,
+  ILogin,
+  ISendPasswordResetEmail,
+  IResetPassword,
+} from "../shared/schemas/auth.schema";
+import { hashPassword, comparePassword } from "../utils/hash";
+import { signToken } from "../utils/jwt.js";
+import {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+} from "../utils/mailer.js";
+import { v4 as uuidv4 } from "uuid";
 
-const JWT_SECRET: string = process.env.JWT_SECRET!;
+export const registerService = async (data: IRegister) => {
+  // Kiểm tra nếu email đã tồn tại
+  const existingUser = await prisma.user.findUnique({
+    where: { email: data.email },
+  });
 
-// Hàm hash password
-export const hashPassword = async (password: string): Promise<string> => {
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    const passwordHash = await bcrypt.hash(password, salt);
-    
-    return passwordHash;
+  if (existingUser) {
+    throw { status: 409, message: "Email đã được sử dụng." };
+  }
+  // Băm mật khẩu
+  const hashedPassword = await hashPassword(data.password);
+  // 4. Lưu user mới
+  const user = await prisma.user.create({
+    data: {
+      fullName: data.fullName,
+      email: data.email,
+      phone: data.phone,
+      passwordHash: hashedPassword,
+      role: "customer",
+      verified: false,
+      status: "active",
+    },
+  });
+  // 5. Gửi email xác minh
+  await sendVerificationEmailService(data.email, data.fullName);
+  return user;
 };
 
-// Hàm tạo Token
-export const generateToken = (user: UserPublicData): string => {
-    
-    const accessToken = jwt.sign(user, JWT_SECRET, { expiresIn: '1d'})
-    return accessToken;
-}
+export const loginService = async (data: ILogin) => {
+  // Tìm user theo email
+  const user = await prisma.user.findUnique({
+    where: { email: data.email },
+  });
+  if (!user) {
+    throw { status: 401, message: "Email hoặc mật khẩu không đúng." };
+  }
+  const isValidPassword = await comparePassword(
+    data.password,
+    user.passwordHash
+  );
+  if (!isValidPassword) {
+    throw { status: 401, message: "Email hoặc mật khẩu không đúng." };
+  }
 
-// Kiểm tra Email
-export const checkEmailExists = async (email: string): Promise<boolean> => {
-    const user = await getUserByEmail(email);
+  if (user.status !== "active") {
+    throw { status: 403, message: "Tài khoản của bạn đã bị khóa" };
+  }
 
-    return user !== null;
-}
-
-// Kiểm tra định dạng Email
-export const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    // Kiểm tra email có khớp với regex không
-    return emailRegex.test(email);
-};
-
-// Kiểm tra SĐT Việt Nam
-export const isValidVietnamesePhoneNumber = (phone: string): boolean => {
-    const cleanedPhone = phone.replace(/[\s.-]/g, '');
-    
-    // Regex cho 10 chữ số bắt đầu bằng 0 (ví dụ: 090xxxxxxx)
-    const tenDigitRegex = /^0\d{9}$/;
-    
-    // Regex cho (+84) và theo sau là 9 chữ số (ví dụ: +8490xxxxxxx)
-    const plus84Regex = /^\+84\d{9}$/;
-
-    // Kiểm tra với chuỗi đã được làm sạch
-    return tenDigitRegex.test(cleanedPhone) || plus84Regex.test(cleanedPhone);
-};
-
-// Kiểm tra password phù hợp
-export const isStrongPassword = (password: string): boolean => {
-    // 1. Kiểm tra độ dài: Tối thiểu 8 ký tự.
-    const minLengthRegex = /.{8,}/; 
-    
-    // 2. Kiểm tra chữ hoa: Chứa ít nhất 1 chữ cái viết hoa (A-Z).
-    const uppercaseRegex = /[A-Z]+/;
-    
-    // 3. Kiểm tra ký tự đặc biệt: Chứa ít nhất 1 trong các ký tự đặc biệt phổ biến.
-    const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]+/;
-    
-    return minLengthRegex.test(password) &&
-           uppercaseRegex.test(password) &&
-           specialCharRegex.test(password);
-};
-
-// Kiểm tra status user 
-export const isUserActive = (status: UserStatus): boolean => {
-    const activeUser: UserStatus = 'active';
-    return activeUser === status;
-}
-
-// Hàm đăng nhập
-export const login = async (email: string, password: string): Promise<UserPublicData | null> => {
-    const user = await getUserByEmail(email);
-
-    if (!user) {
-        console.log('DEBUG: Người dùng KHÔNG được tìm thấy.');
-        throw new Error('Email hoặc mật khẩu không đúng');
-    }
-
-    if (!isUserActive) {
-        console.log('DEBUG: Người dùng KHÔNG Active.');
-        throw new Error('Người dùng không active');
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.passwordHash);
-
-    const publicUser: UserPublicData | null = await getUserPublicData(user.id);
-
-    if (!publicUser) {
-        throw new Error('Không thể tìm thấy dữ liệu người dùng');
-    }
-    
-    if (!passwordMatch) {
-        throw new Error('Email hoặc mật khẩu không đúng');
-    }
-
-    return publicUser;
-}
-
-export const register = async (payload: CreateUserPayload): Promise<User> => {
-
-    // 2. Phối hợp: Gọi Auth Service để băm mật khẩu
-    const passwordHash = await hashPassword(payload.password);
-
-    // Tạo Token và Ngày tháng
-    const verifyToken = generateVerifyToken();
-    const expireDate = getExpirationDate();
-
-    // 3. Chuẩn bị Payload cho Repository
-    const repoPayload: UserRepoPayload = {
-        ...payload,
-        status: 'active',
-        passwordHash: passwordHash, // Thay thế mật khẩu thô bằng hash
-        verified: false,
-
-        verifyToken: verifyToken,
-        verifySentAt: new Date(),
-        verifyExpireAt: expireDate,
+  if (!user.verified) {
+    await sendVerificationEmailService(user.email, user.fullName);
+    throw {
+      status: 403,
+      message: "Vui lòng xác minh email trước khi đăng nhập.",
     };
+  }
 
-    // 4. Gọi Repository để lưu vào CSDL
-    const newUser = await createUser(repoPayload); 
+  const token = signToken({
+    user_id: user.id,
+    role: user.role,
+  });
+  if (!token) {
+    throw { status: 500, message: "Không thể tạo token đăng nhập." };
+  }
 
-    return newUser;
+  return {
+    token,
+    user: {
+      id: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      status: user.status,
+      verified: user.verified,
+    },
+  };
 };
 
-export const verifyEmail = async (verifyToken: string) => {
-    const user: User | null= await getUserByVerifyToken(verifyToken);
+export const sendVerificationEmailService = async (
+  email: string,
+  fullName: string
+) => {
+  // 1. Tạo verify token mới
+  const verifyToken = uuidv4();
+  const verifySentAt = new Date();
+  const verifyExpireAt = new Date(verifySentAt.getTime() + 24 * 60 * 60 * 1000); // 24h
 
-    if (!user) {
-        throw Error("Khong tim duoc user");
-    }
+  // 2. Cập nhật token vào DB
+  await prisma.user.update({
+    where: { email: email },
+    data: { verifyToken, verifySentAt, verifyExpireAt },
+  });
 
-    if (user.verifyExpireAt && user.verifyExpireAt < new Date()) {
-        // Kiểm tra xem thời gian hiện tại đã vượt quá thời gian hết hạn chưa
-        throw new Error("Token đã hết hạn. Vui lòng yêu cầu gửi lại email xác minh.");
-    }
+  // 3. Gửi email (thay link bằng frontend của bạn)
+  await sendVerificationEmail(email, verifyToken, fullName);
 
-    if (user.verified) {
-        // Người dùng đã được xác minh rồi
-        return { message: "Email đã được xác minh trước đó." };
-    }
+  return { verifyToken, verifySentAt, verifyExpireAt };
+};
 
-    await updateUserVerificationStatus(user.id);
+export const verifyEmailService = async (token: string) => {
+  const user = await prisma.user.findFirst({
+    where: { verifyToken: token },
+  });
 
-    return { message: "Xác minh email thành công!" };
-}
+  if (!user) {
+    throw { status: 400, message: "Token không hợp lệ" };
+  }
+  if (user.verified) {
+    throw { status: 400, message: "Email đã được xác thực" };
+  }
+  const now = new Date();
+  if (!user.verifyExpireAt || user.verifyExpireAt < now) {
+    throw { status: 400, message: "Token đã hết hạn" };
+  }
 
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { verified: true, verifyToken: null, verifyExpireAt: null },
+  });
+
+  return user;
+};
+
+export const sendPasswordResetEmailService = async (
+  data: ISendPasswordResetEmail
+) => {
+  const user = await prisma.user.findUnique({
+    where: { email: data.email },
+  });
+
+  if (!user) {
+    throw { status: 404, message: "Không tìm thấy người dùng với email này." };
+  }
+  const resetToken = uuidv4();
+  const resetSentAt = new Date();
+  const resetExpireAt = new Date(resetSentAt.getTime() + 1 * 60 * 60 * 1000); // 1 giờ
+
+  await prisma.user.update({
+    where: { email: data.email },
+    data: { resetToken, resetSentAt, resetExpireAt },
+  });
+
+  await sendPasswordResetEmail(user.email, resetToken);
+
+  return { message: "Đã gửi email đặt lại mật khẩu vào email của bạn" };
+};
+
+export const resetPasswordService = async (
+  token: string,
+  data: IResetPassword
+) => {
+  const user = await prisma.user.findFirst({
+    where: { resetToken: token },
+  });
+  if (!user) {
+    throw { status: 400, message: "Token không hợp lệ" };
+  }
+  const now = new Date();
+  if (!user.resetExpireAt || user.resetExpireAt < now) {
+    throw { status: 400, message: "Token đã hết hạn" };
+  }
+  const hashedPassword = await hashPassword(data.newPassword);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      passwordHash: hashedPassword,
+      resetToken: null,
+      resetExpireAt: null,
+    },
+  });
+  return user;
+};

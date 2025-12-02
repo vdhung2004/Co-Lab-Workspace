@@ -1,31 +1,15 @@
 {
   "compilerOptions": {
-    /* Cấu hình Dự án (Project Options) */
-    "target": "es2020",                                /* Phiên bản JavaScript output: Hiện đại, hỗ trợ async/await tốt. */
-    "module": "commonjs",                              /* Hệ thống module: Sử dụng CommonJS (phổ biến với Node.js/Express). */
-    // "rootDir": "./src",                                /* Nơi bắt đầu tìm kiếm các file .ts */
-    "outDir": "./dist",                                /* Thư mục output cho file .js đã biên dịch. */
-    "esModuleInterop": true,                           /* Quan trọng: Cho phép import các module CommonJS (như Express) bằng cú pháp ES Module (import ... from ...). */
-    "forceConsistentCasingInFileNames": true,          /* Đảm bảo tên file nhất quán về chữ hoa/chữ thường. */
-    "resolveJsonModule": true,                         /* Cho phép nhập file .json. */
-    "isolatedModules": true,                           /* Đảm bảo mỗi file có thể được biên dịch độc lập. */
-
-    /* Cấu hình Type Checking */
-    "strict": true,                                    /* Bật tất cả các quy tắc kiểm tra nghiêm ngặt (nên dùng). */
-    "skipLibCheck": true,                              /* Bỏ qua việc kiểm tra các file type trong node_modules (giảm thời gian build). */
-    "noImplicitAny": true,                             /* Lỗi nếu không khai báo kiểu rõ ràng. */
-    "strictNullChecks": true,                          /* Kiểm tra nghiêm ngặt các giá trị null và undefined. */
-
-    /* Cấu hình Thư viện và Decorators */
-    "lib": ["es2020"],                                 /* Khai báo các thư viện môi trường (runtime) được sử dụng. */
-    "emitDecoratorMetadata": true,                     /* Cần thiết nếu dùng các thư viện dựa trên Decorator (ví dụ: TypeORM, NestJS). */
-    "experimentalDecorators": true,                    /* Bật tính năng experimental decorators. */
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "src",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   },
-  "include": [
-    "src/**/*"                                         /* Chỉ biên dịch tất cả các file trong thư mục src. */
-  ],
-  "exclude": [
-    "node_modules",                                    /* Loại trừ thư mục node_modules. */
-    "dist"                                             /* Loại trừ thư mục output đã biên dịch. */
-  ]
+  "include": ["src"]
 }

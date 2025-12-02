@@ -1,18 +1,22 @@
 // src/app.ts
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
+import authRoutes from "./routes/auth.routes";
+import userRoutes from "./routes/user.routes";
 
 const app: Application = express();
 
+const CLIENT_URL: string = process.env.CLIENT_URL || "http://localhost:3000";
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // Cho phép Frontend của bạn truy cập
+    origin: CLIENT_URL, // Cho phép Frontend của bạn truy cập
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true, // Nếu bạn sử dụng cookie hoặc Authorization header
   })
 );
 
-app.use(express.json()); // Cho phép đọc body JSON
+app.use(express.json());
 
 // Route test cơ bản
 app.get("/", (req: Request, res: Response) => {
@@ -20,6 +24,9 @@ app.get("/", (req: Request, res: Response) => {
     message: "API đang chạy!",
   });
 });
+
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes); // Thêm route user ở đây
 
 app.use((err: any, req: Request, res: Response, next: any) => {
   console.error(err.stack);
