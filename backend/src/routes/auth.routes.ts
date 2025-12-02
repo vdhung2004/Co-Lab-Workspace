@@ -1,21 +1,17 @@
-import { Router } from 'express';
-import { createUser, loginUser, verifyEmailController } from '../controllers/user.controller';
-import { authenticateToken, authorize } from '../middlewares/auth.middle';
-import { Request, Response } from 'express';
-const authRoutes = Router();
+import express from "express";
+import {
+  loginController,
+  registerController,
+  resetPasswordController,
+  sendPasswordResetEmailController,
+  verifyEmailController,
+} from "../controllers/auth.controllert";
 
-authRoutes.post('/register', createUser);
+const router = express.Router();
 
-authRoutes.post('/login', loginUser);
-
-authRoutes.get('/verify-email', verifyEmailController)
-
-// authRoutes.get('/test', authenticateToken, (req: Request, res: Response) => {
-//     console.log('Authen thanh cong');
-// })
-
-// authRoutes.get('/test/author', authenticateToken, authorize('admin'), (req: Request, res: Response) => {
-//     console.log('authorize thanh cong');
-// })
-
-export default authRoutes;
+router.post("/register", registerController);
+router.post("/login", loginController);
+router.get("/verify/:token", verifyEmailController);
+router.post("/send-password-reset-email", sendPasswordResetEmailController);
+router.post("/reset-password/:token", resetPasswordController);
+export default router;

@@ -1,17 +1,30 @@
-import { Router } from 'express'
-import { showUserData,
-    changeUserpassController,
-    updateUserPhoneAndFullNameController
- } from '../controllers/user.controller';
-import { authenticateToken, authorize } from '../middlewares/auth.middle';
+import { Router } from "express";
+import {
+  changePasswordController,
+  getAllUsersController,
+  getProfileController,
+  updateProfileController,
+  updateUserByAdminController,
+} from "../controllers/user.controller.js";
+import {
+  authenticate,
+  authorizeRole,
+} from "../middlewares/auth.middlerware.js";
 
+const router = Router();
 
-const userRoutes = Router();
+// User routes
+router.get("/profile", authenticate, getProfileController);
+router.put("/profile", authenticate, updateProfileController);
+router.post("/change-password", authenticate, changePasswordController);
 
-userRoutes.get('/profile', authenticateToken, showUserData);
+// Admin routes
+router.get("/", authenticate, authorizeRole(["admin"]), getAllUsersController);
+router.put(
+  "/:userId",
+  authenticate,
+  authorizeRole(["admin"]),
+  updateUserByAdminController
+);
 
-userRoutes.put('/profile', authenticateToken, updateUserPhoneAndFullNameController);
-
-userRoutes.post('/profile/change-password', authenticateToken, changeUserpassController);
-
-export default userRoutes;
+export default router;
