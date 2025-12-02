@@ -10,13 +10,28 @@ import {
   authenticate,
   authorizeRole,
 } from "../middlewares/auth.middlerware.js";
+import { validate } from "../middlewares/validate.middleware";
+import {
+  changePasswordSchema,
+  updateProfileSchema,
+} from "../shared/schemas/user.schema.js";
 
 const router = Router();
 
 // User routes
 router.get("/profile", authenticate, getProfileController);
-router.put("/profile", authenticate, updateProfileController);
-router.post("/change-password", authenticate, changePasswordController);
+router.put(
+  "/profile",
+  validate(updateProfileSchema),
+  authenticate,
+  updateProfileController
+);
+router.post(
+  "/change-password",
+  validate(changePasswordSchema),
+  authenticate,
+  changePasswordController
+);
 
 // Admin routes
 router.get("/", authenticate, authorizeRole(["admin"]), getAllUsersController);

@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export const registerService = async (data: IRegister) => {
   // Kiểm tra nếu email đã tồn tại
+  console.log(data);
   const existingUser = await prisma.user.findUnique({
     where: { email: data.email },
   });
