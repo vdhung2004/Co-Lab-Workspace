@@ -1,21 +1,15 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
-  output   = "src/generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "mysql"
 }
 
-// ------------------------------------
-// ENUMS (Các kiểu dữ liệu liệt kê)
-// ------------------------------------
+// --------------------
+// ENUMS
+// --------------------
 enum UserRole {
   customer
   admin
@@ -65,230 +59,215 @@ enum RefundStatus {
   failed
 }
 
-// ------------------------------------
-// 1️⃣ USERS
-// ------------------------------------
+// --------------------
+// 1️⃣ USERS  (UNCHANGED)
+// --------------------
 model User {
-  // PK
-  id String @id @default(uuid()) @map("user_id")
+  id             String     @id @default(uuid()) @map("user_id")
+  fullName       String     @map("full_name") @db.VarChar(100)
+  email          String     @unique @db.VarChar(255)
+  phone          String     @db.VarChar(20)
+  passwordHash   String     @map("password_hash") @db.Text
+  role           UserRole
+  status         UserStatus
+  verified       Boolean
+  verifyToken    String?    @map("verify_token") @db.VarChar(255)
+  verifySentAt   DateTime?  @map("verify_sent_at") @db.DateTime(0)
+  verifyExpireAt DateTime?  @map("verify_expire_at") @db.DateTime(0)
+  resetToken     String?    @map("reset_token") @db.VarChar(255)
+  resetSentAt    DateTime?  @map("reset_sent_at") @db.DateTime(0)
+  resetExpireAt  DateTime?  @map("reset_expire_at") @db.DateTime(0)
+  createdAt      DateTime   @default(now()) @map("created_at")
 
-  // Thông tin cơ bản
-  fullName     String @map("full_name") @db.VarChar(100)
-  email        String @unique @db.VarChar(255)
-  phone        String @db.VarChar(20)
-  passwordHash String @map("password_hash") @db.Text
-
-  // Phân quyền & Trạng thái
-  role     UserRole
-  status   UserStatus
-  verified Boolean
-
-  // Xác minh email/sđt
-  verifyToken    String?   @map("verify_token") @db.VarChar(255)
-  verifySentAt   DateTime? @map("verify_sent_at") @db.DateTime(0)
-  verifyExpireAt DateTime? @map("verify_expire_at") @db.DateTime(0)
-
-  // Reset mật khẩu
-  resetToken    String?   @map("reset_token") @db.VarChar(255)
-  resetSentAt   DateTime? @map("reset_sent_at") @db.DateTime(0)
-  resetExpireAt DateTime? @map("reset_expire_at") @db.DateTime(0)
-
-  // Timestamps & Quan hệ
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Quan hệ: User (1) ----< Bookings (n)
   bookings         Booking[]
-  // Quan hệ: User (1) ----< Refunds (n) (Admin xử lý)
   processedRefunds Refund[]  @relation("ProcessedByAdmin")
 
   @@map("users")
 }
 
-// ------------------------------------
-// 2️⃣ WORKSPACES
-// ------------------------------------
+// --------------------
+// 2️⃣ WORKSPACES  (UNCHANGED)
+// --------------------
 model Workspace {
-  // PK
-  id String @id @default(uuid()) @map("workspace_id")
-
-  // Thông tin
+  id          String          @id @default(uuid()) @map("workspace_id")
   name        String          @db.VarChar(100)
   address     String          @db.Text
   description String          @db.Text
   latitude    Float
   longitude   Float
-  imageUrls   Json            @map("image_urls") // Lưu trữ gallery ảnh dạng JSON
   status      WorkspaceStatus
+  createdAt   DateTime        @default(now()) @map("created_at")
 
-  // Timestamps & Quan hệ
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Quan hệ: Workspaces (1) ----< Spaces (n)
-  spaces Space[]
+  floors Floor[] // NEW: quản lý tầng
+  spaces Space[] // UNCHANGED: spaces vẫn FK workspace
+  images WorkspaceImage[] // NEW: tách JSON ra bảng riêng
 
   @@map("workspaces")
 }
 
-// ------------------------------------
-// 3️⃣ SPACES
-// ------------------------------------
+// Bảng ảnh workspace (tách JSON)
+model WorkspaceImage {
+  id          String    @id @default(uuid())
+  workspaceId String
+  url         String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@map("workspace_images")
+}
+
+// --------------------
+// 3️⃣ FLOORS (NEW)
+// --------------------
+model Floor {
+  id          String   @id @default(uuid()) @map("floor_id")
+  workspaceId String
+  name        String   @db.VarChar(100)
+  imageUrl    String?  @map("image_url") // hình nền tầng
+  width       Int? // optional, scale map
+  height      Int? // optional
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  spaces    Space[]
+
+  @@map("floors")
+}
+
+// --------------------
+// 4️⃣ SPACES
+// --------------------
 model Space {
-  // PK
-  id String @id @default(uuid()) @map("space_id")
-
-  // FK
-  workspaceId String @map("workspace_id")
-
-  // Thông tin
+  id          String      @id @default(uuid()) @map("space_id")
+  workspaceId String      @map("workspace_id")
+  floorId     String?     @map("floor_id") // NEW: FK floor
   name        String      @db.VarChar(100)
   type        SpaceType
   capacity    Int
   priceHourly Decimal     @map("price_hourly") @db.Decimal(10, 2)
   description String      @db.Text
   status      SpaceStatus
-  positionX   Int?        @map("position_x") // Có thể NULL
-  positionY   Int?        @map("position_y") // Có thể NULL
-  imageUrls   Json        @map("image_urls")
+  positionX   Int?        @map("position_x")
+  positionY   Int?        @map("position_y")
+  createdAt   DateTime    @default(now()) @map("created_at")
 
-  // Timestamps & Quan hệ
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Quan hệ: Spaces (1) ----< Workspaces (1)
   workspace Workspace      @relation(fields: [workspaceId], references: [id])
-  // Quan hệ: Spaces (1) ----< Bookings (n)
-  bookings  Booking[]
-  // Quan hệ: Spaces (1) ----< SpaceAmenities (n) (N-N)
-  amenities SpaceAmenity[]
+  floor     Floor?         @relation(fields: [floorId], references: [id])
+  bookings  BookingSpace[] // NEW: N-N booking
+  amenities SpaceAmenity[] // UNCHANGED
+  images    SpaceImage[] // NEW: tách JSON
 
   @@map("spaces")
 }
 
-// ------------------------------------
-// 4️⃣ AMENITIES
-// ------------------------------------
+// Bảng ảnh space (tách JSON)
+model SpaceImage {
+  id      String @id @default(uuid())
+  spaceId String
+  url     String
+  space   Space  @relation(fields: [spaceId], references: [id])
+
+  @@map("space_images")
+}
+
+// --------------------
+// 5️⃣ AMENITIES  (UNCHANGED)
+// --------------------
 model Amenity {
-  // PK
-  id String @id @default(uuid()) @map("amenity_id")
-
-  // Thông tin
-  name String @db.VarChar(255)
-  icon String @db.VarChar(255)
-
-  // Timestamps & Quan hệ
+  id        String   @id @default(uuid()) @map("amenity_id")
+  name      String   @db.VarChar(255)
+  icon      String   @db.VarChar(255)
   createdAt DateTime @default(now()) @map("created_at")
 
-  // Quan hệ: Amenities (1) ----< SpaceAmenities (n) (N-N)
   spaces SpaceAmenity[]
 
   @@map("amenities")
 }
 
-// ------------------------------------
-// 5️⃣ SPACE_AMENITIES (Bảng liên kết N-N)
-// ------------------------------------
+// --------------------
+// 6️⃣ SPACE_AMENITIES (UNCHANGED)
+// --------------------
 model SpaceAmenity {
-  // FKs (Thành phần của Khóa chính tổng hợp)
   spaceId   String @map("space_id")
   amenityId String @map("amenity_id")
+  quantity  Int?
 
-  // Thông tin
-  quantity Int? // Có thể NULL nếu không cần
-
-  // Quan hệ
   space   Space   @relation(fields: [spaceId], references: [id])
   amenity Amenity @relation(fields: [amenityId], references: [id])
 
-  // Khóa chính tổng hợp (Composite Primary Key)
   @@id([spaceId, amenityId])
   @@map("space_amenities")
 }
 
-// ------------------------------------
-// 6️⃣ BOOKINGS
-// ------------------------------------
+// --------------------
+// 7️⃣ BOOKINGS
+// --------------------
 model Booking {
-  // PK
-  id String @id @default(uuid()) @map("booking_id")
+  id     String  @id @default(uuid()) @map("booking_id")
+  userId String? @map("user_id")
 
-  // FK (Khách lẻ không cần userId)
-  userId  String? @map("user_id")
-  spaceId String  @map("space_id")
-
-  // Thông tin khách lẻ
   bookerEmail    String? @map("booker_email") @db.VarChar(255)
   bookerPhone    String? @map("booker_phone") @db.VarChar(20)
   bookerFullname String? @map("booker_fullname") @db.VarChar(100)
 
-  // Chi tiết đặt
   startTime          DateTime      @map("start_time") @db.DateTime(0)
   endTime            DateTime      @map("end_time") @db.DateTime(0)
-  totalAmount        Decimal       @map("total_amount") @db.Decimal(10, 2)
   status             BookingStatus
   cancellationReason String?       @map("cancellation_reason") @db.Text
+  createdAt          DateTime      @default(now()) @map("created_at")
 
-  // Timestamps & Quan hệ
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Quan hệ: Bookings (n) ----> User (1) (Nullable)
-  user    User?    @relation(fields: [userId], references: [id])
-  // Quan hệ: Bookings (n) ----> Spaces (1)
-  space   Space    @relation(fields: [spaceId], references: [id])
-  // Quan hệ: Bookings (1) ----< Payments (0/1)
+  user    User?          @relation(fields: [userId], references: [id])
+  spaces  BookingSpace[] // NEW: N-N booking
   payment Payment?
 
   @@map("bookings")
 }
 
-// ------------------------------------
-// 7️⃣ PAYMENTS
-// ------------------------------------
+// --------------------
+// 8️⃣ BOOKING_SPACES (NEW)
+// --------------------
+model BookingSpace {
+  id        String        @id @default(uuid()) @map("booking_space_id")
+  bookingId String        @map("booking_id")
+  spaceId   String        @map("space_id")
+  status    BookingStatus
+  booking   Booking       @relation(fields: [bookingId], references: [id])
+  space     Space         @relation(fields: [spaceId], references: [id])
+
+  @@map("booking_spaces")
+}
+
+// --------------------
+// 9️⃣ PAYMENTS  (UNCHANGED)
+// --------------------
 model Payment {
-  // PK
-  id String @id @default(uuid()) @map("payment_id")
-
-  // FK (Quan hệ 1-1 với Booking)
-  bookingId String @unique @map("booking_id") // UNIQUE để đảm bảo 1-1
-
-  // Chi tiết
+  id              String          @id @default(uuid()) @map("payment_id")
+  bookingId       String          @unique @map("booking_id")
   provider        PaymentProvider
   amount          Decimal         @db.Decimal(10, 2)
   transactionCode String?         @map("transaction_code") @db.VarChar(255)
   status          PaymentStatus
+  createdAt       DateTime        @default(now()) @map("created_at")
 
-  // Timestamps & Quan hệ
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Quan hệ: Payments (n) ----> Booking (1)
   booking Booking @relation(fields: [bookingId], references: [id])
-  // Quan hệ: Payments (1) ----< Refunds (0/1)
   refund  Refund?
 
   @@map("payments")
 }
 
-// ------------------------------------
-// 8️⃣ REFUNDS
-// ------------------------------------
+// --------------------
+// 10️⃣ REFUNDS  (UNCHANGED)
+// --------------------
 model Refund {
-  // PK
-  id String @id @default(uuid()) @map("refund_id")
-
-  // FK (Quan hệ 1-1 với Payment)
-  paymentId   String @unique @map("payment_id") // UNIQUE để đảm bảo 1-1
-  processedBy String @map("processed_by")
-
-  // Chi tiết
+  id           String       @id @default(uuid()) @map("refund_id")
+  paymentId    String       @unique @map("payment_id")
+  processedBy  String       @map("processed_by")
   refundAmount Decimal      @map("refund_amount") @db.Decimal(10, 2)
   refundRate   Int          @map("refund_rate")
   reason       String       @db.Text
   status       RefundStatus
+  createdAt    DateTime     @default(now()) @map("created_at")
 
-  // Timestamps & Quan hệ
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Quan hệ: Refunds (n) ----> Payment (1)
   payment        Payment @relation(fields: [paymentId], references: [id])
-  // Quan hệ: Refunds (n) ----> User (Admin) (1)
   adminProcessor User    @relation("ProcessedByAdmin", fields: [processedBy], references: [id])
 
   @@map("refunds")

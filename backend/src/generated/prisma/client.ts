@@ -50,10 +50,25 @@ export type User = Prisma.UserModel
  */
 export type Workspace = Prisma.WorkspaceModel
 /**
+ * Model WorkspaceImage
+ * 
+ */
+export type WorkspaceImage = Prisma.WorkspaceImageModel
+/**
+ * Model Floor
+ * 
+ */
+export type Floor = Prisma.FloorModel
+/**
  * Model Space
  * 
  */
 export type Space = Prisma.SpaceModel
+/**
+ * Model SpaceImage
+ * 
+ */
+export type SpaceImage = Prisma.SpaceImageModel
 /**
  * Model Amenity
  * 
@@ -69,6 +84,11 @@ export type SpaceAmenity = Prisma.SpaceAmenityModel
  * 
  */
 export type Booking = Prisma.BookingModel
+/**
+ * Model BookingSpace
+ * 
+ */
+export type BookingSpace = Prisma.BookingSpaceModel
 /**
  * Model Payment
  * 

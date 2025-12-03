@@ -65,7 +65,6 @@ export type WorkspaceCountAggregateOutputType = {
   description: number
   latitude: number
   longitude: number
-  imageUrls: number
   status: number
   createdAt: number
   _all: number
@@ -111,7 +110,6 @@ export type WorkspaceCountAggregateInputType = {
   description?: true
   latitude?: true
   longitude?: true
-  imageUrls?: true
   status?: true
   createdAt?: true
   _all?: true
@@ -210,7 +208,6 @@ export type WorkspaceGroupByOutputType = {
   description: string
   latitude: number
   longitude: number
-  imageUrls: runtime.JsonValue
   status: $Enums.WorkspaceStatus
   createdAt: Date
   _count: WorkspaceCountAggregateOutputType | null
@@ -245,10 +242,11 @@ export type WorkspaceWhereInput = {
   description?: Prisma.StringFilter<"Workspace"> | string
   latitude?: Prisma.FloatFilter<"Workspace"> | number
   longitude?: Prisma.FloatFilter<"Workspace"> | number
-  imageUrls?: Prisma.JsonFilter<"Workspace">
   status?: Prisma.EnumWorkspaceStatusFilter<"Workspace"> | $Enums.WorkspaceStatus
   createdAt?: Prisma.DateTimeFilter<"Workspace"> | Date | string
+  floors?: Prisma.FloorListRelationFilter
   spaces?: Prisma.SpaceListRelationFilter
+  images?: Prisma.WorkspaceImageListRelationFilter
 }
 
 export type WorkspaceOrderByWithRelationInput = {
@@ -258,10 +256,11 @@ export type WorkspaceOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  imageUrls?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  floors?: Prisma.FloorOrderByRelationAggregateInput
   spaces?: Prisma.SpaceOrderByRelationAggregateInput
+  images?: Prisma.WorkspaceImageOrderByRelationAggregateInput
   _relevance?: Prisma.WorkspaceOrderByRelevanceInput
 }
 
@@ -275,10 +274,11 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Workspace"> | string
   latitude?: Prisma.FloatFilter<"Workspace"> | number
   longitude?: Prisma.FloatFilter<"Workspace"> | number
-  imageUrls?: Prisma.JsonFilter<"Workspace">
   status?: Prisma.EnumWorkspaceStatusFilter<"Workspace"> | $Enums.WorkspaceStatus
   createdAt?: Prisma.DateTimeFilter<"Workspace"> | Date | string
+  floors?: Prisma.FloorListRelationFilter
   spaces?: Prisma.SpaceListRelationFilter
+  images?: Prisma.WorkspaceImageListRelationFilter
 }, "id">
 
 export type WorkspaceOrderByWithAggregationInput = {
@@ -288,7 +288,6 @@ export type WorkspaceOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  imageUrls?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.WorkspaceCountOrderByAggregateInput
@@ -308,7 +307,6 @@ export type WorkspaceScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"Workspace"> | string
   latitude?: Prisma.FloatWithAggregatesFilter<"Workspace"> | number
   longitude?: Prisma.FloatWithAggregatesFilter<"Workspace"> | number
-  imageUrls?: Prisma.JsonWithAggregatesFilter<"Workspace">
   status?: Prisma.EnumWorkspaceStatusWithAggregatesFilter<"Workspace"> | $Enums.WorkspaceStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Workspace"> | Date | string
 }
@@ -320,10 +318,11 @@ export type WorkspaceCreateInput = {
   description: string
   latitude: number
   longitude: number
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status: $Enums.WorkspaceStatus
   createdAt?: Date | string
+  floors?: Prisma.FloorCreateNestedManyWithoutWorkspaceInput
   spaces?: Prisma.SpaceCreateNestedManyWithoutWorkspaceInput
+  images?: Prisma.WorkspaceImageCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateInput = {
@@ -333,10 +332,11 @@ export type WorkspaceUncheckedCreateInput = {
   description: string
   latitude: number
   longitude: number
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status: $Enums.WorkspaceStatus
   createdAt?: Date | string
+  floors?: Prisma.FloorUncheckedCreateNestedManyWithoutWorkspaceInput
   spaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  images?: Prisma.WorkspaceImageUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUpdateInput = {
@@ -346,10 +346,11 @@ export type WorkspaceUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumWorkspaceStatusFieldUpdateOperationsInput | $Enums.WorkspaceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floors?: Prisma.FloorUpdateManyWithoutWorkspaceNestedInput
   spaces?: Prisma.SpaceUpdateManyWithoutWorkspaceNestedInput
+  images?: Prisma.WorkspaceImageUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateInput = {
@@ -359,10 +360,11 @@ export type WorkspaceUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumWorkspaceStatusFieldUpdateOperationsInput | $Enums.WorkspaceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floors?: Prisma.FloorUncheckedUpdateManyWithoutWorkspaceNestedInput
   spaces?: Prisma.SpaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  images?: Prisma.WorkspaceImageUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyInput = {
@@ -372,7 +374,6 @@ export type WorkspaceCreateManyInput = {
   description: string
   latitude: number
   longitude: number
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status: $Enums.WorkspaceStatus
   createdAt?: Date | string
 }
@@ -384,7 +385,6 @@ export type WorkspaceUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumWorkspaceStatusFieldUpdateOperationsInput | $Enums.WorkspaceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -396,7 +396,6 @@ export type WorkspaceUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumWorkspaceStatusFieldUpdateOperationsInput | $Enums.WorkspaceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -414,7 +413,6 @@ export type WorkspaceCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
-  imageUrls?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -468,6 +466,34 @@ export type EnumWorkspaceStatusFieldUpdateOperationsInput = {
   set?: $Enums.WorkspaceStatus
 }
 
+export type WorkspaceCreateNestedOneWithoutImagesInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutImagesInput, Prisma.WorkspaceUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutImagesInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutImagesInput, Prisma.WorkspaceUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutImagesInput
+  upsert?: Prisma.WorkspaceUpsertWithoutImagesInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutImagesInput, Prisma.WorkspaceUpdateWithoutImagesInput>, Prisma.WorkspaceUncheckedUpdateWithoutImagesInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutFloorsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutFloorsInput, Prisma.WorkspaceUncheckedCreateWithoutFloorsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutFloorsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutFloorsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutFloorsInput, Prisma.WorkspaceUncheckedCreateWithoutFloorsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutFloorsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutFloorsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutFloorsInput, Prisma.WorkspaceUpdateWithoutFloorsInput>, Prisma.WorkspaceUncheckedUpdateWithoutFloorsInput>
+}
+
 export type WorkspaceCreateNestedOneWithoutSpacesInput = {
   create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutSpacesInput, Prisma.WorkspaceUncheckedCreateWithoutSpacesInput>
   connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutSpacesInput
@@ -482,6 +508,142 @@ export type WorkspaceUpdateOneRequiredWithoutSpacesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutSpacesInput, Prisma.WorkspaceUpdateWithoutSpacesInput>, Prisma.WorkspaceUncheckedUpdateWithoutSpacesInput>
 }
 
+export type WorkspaceCreateWithoutImagesInput = {
+  id?: string
+  name: string
+  address: string
+  description: string
+  latitude: number
+  longitude: number
+  status: $Enums.WorkspaceStatus
+  createdAt?: Date | string
+  floors?: Prisma.FloorCreateNestedManyWithoutWorkspaceInput
+  spaces?: Prisma.SpaceCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutImagesInput = {
+  id?: string
+  name: string
+  address: string
+  description: string
+  latitude: number
+  longitude: number
+  status: $Enums.WorkspaceStatus
+  createdAt?: Date | string
+  floors?: Prisma.FloorUncheckedCreateNestedManyWithoutWorkspaceInput
+  spaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutImagesInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutImagesInput, Prisma.WorkspaceUncheckedCreateWithoutImagesInput>
+}
+
+export type WorkspaceUpsertWithoutImagesInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutImagesInput, Prisma.WorkspaceUncheckedUpdateWithoutImagesInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutImagesInput, Prisma.WorkspaceUncheckedCreateWithoutImagesInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutImagesInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutImagesInput, Prisma.WorkspaceUncheckedUpdateWithoutImagesInput>
+}
+
+export type WorkspaceUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumWorkspaceStatusFieldUpdateOperationsInput | $Enums.WorkspaceStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floors?: Prisma.FloorUpdateManyWithoutWorkspaceNestedInput
+  spaces?: Prisma.SpaceUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumWorkspaceStatusFieldUpdateOperationsInput | $Enums.WorkspaceStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floors?: Prisma.FloorUncheckedUpdateManyWithoutWorkspaceNestedInput
+  spaces?: Prisma.SpaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutFloorsInput = {
+  id?: string
+  name: string
+  address: string
+  description: string
+  latitude: number
+  longitude: number
+  status: $Enums.WorkspaceStatus
+  createdAt?: Date | string
+  spaces?: Prisma.SpaceCreateNestedManyWithoutWorkspaceInput
+  images?: Prisma.WorkspaceImageCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutFloorsInput = {
+  id?: string
+  name: string
+  address: string
+  description: string
+  latitude: number
+  longitude: number
+  status: $Enums.WorkspaceStatus
+  createdAt?: Date | string
+  spaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutWorkspaceInput
+  images?: Prisma.WorkspaceImageUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutFloorsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutFloorsInput, Prisma.WorkspaceUncheckedCreateWithoutFloorsInput>
+}
+
+export type WorkspaceUpsertWithoutFloorsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutFloorsInput, Prisma.WorkspaceUncheckedUpdateWithoutFloorsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutFloorsInput, Prisma.WorkspaceUncheckedCreateWithoutFloorsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutFloorsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutFloorsInput, Prisma.WorkspaceUncheckedUpdateWithoutFloorsInput>
+}
+
+export type WorkspaceUpdateWithoutFloorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumWorkspaceStatusFieldUpdateOperationsInput | $Enums.WorkspaceStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  spaces?: Prisma.SpaceUpdateManyWithoutWorkspaceNestedInput
+  images?: Prisma.WorkspaceImageUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutFloorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumWorkspaceStatusFieldUpdateOperationsInput | $Enums.WorkspaceStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  spaces?: Prisma.SpaceUncheckedUpdateManyWithoutWorkspaceNestedInput
+  images?: Prisma.WorkspaceImageUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
 export type WorkspaceCreateWithoutSpacesInput = {
   id?: string
   name: string
@@ -489,9 +651,10 @@ export type WorkspaceCreateWithoutSpacesInput = {
   description: string
   latitude: number
   longitude: number
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status: $Enums.WorkspaceStatus
   createdAt?: Date | string
+  floors?: Prisma.FloorCreateNestedManyWithoutWorkspaceInput
+  images?: Prisma.WorkspaceImageCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutSpacesInput = {
@@ -501,9 +664,10 @@ export type WorkspaceUncheckedCreateWithoutSpacesInput = {
   description: string
   latitude: number
   longitude: number
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status: $Enums.WorkspaceStatus
   createdAt?: Date | string
+  floors?: Prisma.FloorUncheckedCreateNestedManyWithoutWorkspaceInput
+  images?: Prisma.WorkspaceImageUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutSpacesInput = {
@@ -529,9 +693,10 @@ export type WorkspaceUpdateWithoutSpacesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumWorkspaceStatusFieldUpdateOperationsInput | $Enums.WorkspaceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floors?: Prisma.FloorUpdateManyWithoutWorkspaceNestedInput
+  images?: Prisma.WorkspaceImageUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutSpacesInput = {
@@ -541,9 +706,10 @@ export type WorkspaceUncheckedUpdateWithoutSpacesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.EnumWorkspaceStatusFieldUpdateOperationsInput | $Enums.WorkspaceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floors?: Prisma.FloorUncheckedUpdateManyWithoutWorkspaceNestedInput
+  images?: Prisma.WorkspaceImageUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 
@@ -552,11 +718,15 @@ export type WorkspaceUncheckedUpdateWithoutSpacesInput = {
  */
 
 export type WorkspaceCountOutputType = {
+  floors: number
   spaces: number
+  images: number
 }
 
 export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  floors?: boolean | WorkspaceCountOutputTypeCountFloorsArgs
   spaces?: boolean | WorkspaceCountOutputTypeCountSpacesArgs
+  images?: boolean | WorkspaceCountOutputTypeCountImagesArgs
 }
 
 /**
@@ -572,8 +742,22 @@ export type WorkspaceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
 /**
  * WorkspaceCountOutputType without action
  */
+export type WorkspaceCountOutputTypeCountFloorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FloorWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
 export type WorkspaceCountOutputTypeCountSpacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SpaceWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorkspaceImageWhereInput
 }
 
 
@@ -584,10 +768,11 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   description?: boolean
   latitude?: boolean
   longitude?: boolean
-  imageUrls?: boolean
   status?: boolean
   createdAt?: boolean
+  floors?: boolean | Prisma.Workspace$floorsArgs<ExtArgs>
   spaces?: boolean | Prisma.Workspace$spacesArgs<ExtArgs>
+  images?: boolean | Prisma.Workspace$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -600,21 +785,24 @@ export type WorkspaceSelectScalar = {
   description?: boolean
   latitude?: boolean
   longitude?: boolean
-  imageUrls?: boolean
   status?: boolean
   createdAt?: boolean
 }
 
-export type WorkspaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "description" | "latitude" | "longitude" | "imageUrls" | "status" | "createdAt", ExtArgs["result"]["workspace"]>
+export type WorkspaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "description" | "latitude" | "longitude" | "status" | "createdAt", ExtArgs["result"]["workspace"]>
 export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  floors?: boolean | Prisma.Workspace$floorsArgs<ExtArgs>
   spaces?: boolean | Prisma.Workspace$spacesArgs<ExtArgs>
+  images?: boolean | Prisma.Workspace$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Workspace"
   objects: {
+    floors: Prisma.$FloorPayload<ExtArgs>[]
     spaces: Prisma.$SpacePayload<ExtArgs>[]
+    images: Prisma.$WorkspaceImagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -623,7 +811,6 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     description: string
     latitude: number
     longitude: number
-    imageUrls: runtime.JsonValue
     status: $Enums.WorkspaceStatus
     createdAt: Date
   }, ExtArgs["result"]["workspace"]>
@@ -966,7 +1153,9 @@ readonly fields: WorkspaceFieldRefs;
  */
 export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  floors<T extends Prisma.Workspace$floorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$floorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FloorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   spaces<T extends Prisma.Workspace$spacesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$spacesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SpacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  images<T extends Prisma.Workspace$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkspaceImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1002,7 +1191,6 @@ export interface WorkspaceFieldRefs {
   readonly description: Prisma.FieldRef<"Workspace", 'String'>
   readonly latitude: Prisma.FieldRef<"Workspace", 'Float'>
   readonly longitude: Prisma.FieldRef<"Workspace", 'Float'>
-  readonly imageUrls: Prisma.FieldRef<"Workspace", 'Json'>
   readonly status: Prisma.FieldRef<"Workspace", 'WorkspaceStatus'>
   readonly createdAt: Prisma.FieldRef<"Workspace", 'DateTime'>
 }
@@ -1348,6 +1536,30 @@ export type WorkspaceDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
+ * Workspace.floors
+ */
+export type Workspace$floorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Floor
+   */
+  select?: Prisma.FloorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Floor
+   */
+  omit?: Prisma.FloorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorInclude<ExtArgs> | null
+  where?: Prisma.FloorWhereInput
+  orderBy?: Prisma.FloorOrderByWithRelationInput | Prisma.FloorOrderByWithRelationInput[]
+  cursor?: Prisma.FloorWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FloorScalarFieldEnum | Prisma.FloorScalarFieldEnum[]
+}
+
+/**
  * Workspace.spaces
  */
 export type Workspace$spacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1369,6 +1581,30 @@ export type Workspace$spacesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.SpaceScalarFieldEnum | Prisma.SpaceScalarFieldEnum[]
+}
+
+/**
+ * Workspace.images
+ */
+export type Workspace$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorkspaceImage
+   */
+  select?: Prisma.WorkspaceImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorkspaceImage
+   */
+  omit?: Prisma.WorkspaceImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkspaceImageInclude<ExtArgs> | null
+  where?: Prisma.WorkspaceImageWhereInput
+  orderBy?: Prisma.WorkspaceImageOrderByWithRelationInput | Prisma.WorkspaceImageOrderByWithRelationInput[]
+  cursor?: Prisma.WorkspaceImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorkspaceImageScalarFieldEnum | Prisma.WorkspaceImageScalarFieldEnum[]
 }
 
 /**

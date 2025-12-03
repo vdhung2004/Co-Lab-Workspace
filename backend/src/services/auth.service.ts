@@ -4,7 +4,7 @@ import {
   ILogin,
   ISendPasswordResetEmail,
   IResetPassword,
-} from "../shared/schemas/auth.schema";
+} from "../schemas/auth.schema.js";
 import { hashPassword, comparePassword } from "../utils/hash";
 import { signToken } from "../utils/jwt.js";
 import {
