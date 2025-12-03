@@ -31,5 +31,23 @@ router.delete(
   authorizeRole(["admin"]),
   WorkspaceController.delete
 );
+router.post(
+  "/:id/images",
+  authenticate,
+  authorizeRole(["admin"]),
+  WorkspaceController.addImage
+);
+router.delete(
+  "/:workspaceId/images/:imageId",
+  authenticate,
+  authorizeRole(["admin"]),
+  WorkspaceController.deleteImage
+);
+router.put(
+  "/:workspaceId/images/:imageId",
+  authenticate,
+  authorizeRole(["admin"]),
+  WorkspaceController.deleteImage
+);
 
 export default router;
