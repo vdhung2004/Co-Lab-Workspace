@@ -12,7 +12,7 @@ import {
   registerSchema,
   resetPasswordSchema,
   sendPasswordResetEmailSchema,
-} from "../shared/schemas/auth.schema";
+} from "../schemas/auth.schema";
 
 const router = express.Router();
 

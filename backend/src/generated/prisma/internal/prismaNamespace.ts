@@ -386,10 +386,14 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Workspace: 'Workspace',
+  WorkspaceImage: 'WorkspaceImage',
+  Floor: 'Floor',
   Space: 'Space',
+  SpaceImage: 'SpaceImage',
   Amenity: 'Amenity',
   SpaceAmenity: 'SpaceAmenity',
   Booking: 'Booking',
+  BookingSpace: 'BookingSpace',
   Payment: 'Payment',
   Refund: 'Refund'
 } as const
@@ -407,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "workspace" | "space" | "amenity" | "spaceAmenity" | "booking" | "payment" | "refund"
+    modelProps: "user" | "workspace" | "workspaceImage" | "floor" | "space" | "spaceImage" | "amenity" | "spaceAmenity" | "booking" | "bookingSpace" | "payment" | "refund"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -543,6 +547,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WorkspaceImage: {
+      payload: Prisma.$WorkspaceImagePayload<ExtArgs>
+      fields: Prisma.WorkspaceImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorkspaceImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorkspaceImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceImagePayload>
+        }
+        findFirst: {
+          args: Prisma.WorkspaceImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorkspaceImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceImagePayload>
+        }
+        findMany: {
+          args: Prisma.WorkspaceImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceImagePayload>[]
+        }
+        create: {
+          args: Prisma.WorkspaceImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceImagePayload>
+        }
+        createMany: {
+          args: Prisma.WorkspaceImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.WorkspaceImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceImagePayload>
+        }
+        update: {
+          args: Prisma.WorkspaceImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.WorkspaceImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorkspaceImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.WorkspaceImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceImagePayload>
+        }
+        aggregate: {
+          args: Prisma.WorkspaceImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorkspaceImage>
+        }
+        groupBy: {
+          args: Prisma.WorkspaceImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkspaceImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorkspaceImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkspaceImageCountAggregateOutputType> | number
+        }
+      }
+    }
+    Floor: {
+      payload: Prisma.$FloorPayload<ExtArgs>
+      fields: Prisma.FloorFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FloorFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FloorPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FloorFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FloorPayload>
+        }
+        findFirst: {
+          args: Prisma.FloorFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FloorPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FloorFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FloorPayload>
+        }
+        findMany: {
+          args: Prisma.FloorFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FloorPayload>[]
+        }
+        create: {
+          args: Prisma.FloorCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FloorPayload>
+        }
+        createMany: {
+          args: Prisma.FloorCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.FloorDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FloorPayload>
+        }
+        update: {
+          args: Prisma.FloorUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FloorPayload>
+        }
+        deleteMany: {
+          args: Prisma.FloorDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FloorUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.FloorUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FloorPayload>
+        }
+        aggregate: {
+          args: Prisma.FloorAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFloor>
+        }
+        groupBy: {
+          args: Prisma.FloorGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FloorGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FloorCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FloorCountAggregateOutputType> | number
+        }
+      }
+    }
     Space: {
       payload: Prisma.$SpacePayload<ExtArgs>
       fields: Prisma.SpaceFieldRefs
@@ -606,6 +742,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SpaceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SpaceCountAggregateOutputType> | number
+        }
+      }
+    }
+    SpaceImage: {
+      payload: Prisma.$SpaceImagePayload<ExtArgs>
+      fields: Prisma.SpaceImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SpaceImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpaceImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SpaceImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpaceImagePayload>
+        }
+        findFirst: {
+          args: Prisma.SpaceImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpaceImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SpaceImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpaceImagePayload>
+        }
+        findMany: {
+          args: Prisma.SpaceImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpaceImagePayload>[]
+        }
+        create: {
+          args: Prisma.SpaceImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpaceImagePayload>
+        }
+        createMany: {
+          args: Prisma.SpaceImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SpaceImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpaceImagePayload>
+        }
+        update: {
+          args: Prisma.SpaceImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpaceImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.SpaceImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SpaceImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SpaceImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpaceImagePayload>
+        }
+        aggregate: {
+          args: Prisma.SpaceImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSpaceImage>
+        }
+        groupBy: {
+          args: Prisma.SpaceImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SpaceImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SpaceImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SpaceImageCountAggregateOutputType> | number
         }
       }
     }
@@ -804,6 +1006,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.BookingCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.BookingCountAggregateOutputType> | number
+        }
+      }
+    }
+    BookingSpace: {
+      payload: Prisma.$BookingSpacePayload<ExtArgs>
+      fields: Prisma.BookingSpaceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BookingSpaceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingSpacePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BookingSpaceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingSpacePayload>
+        }
+        findFirst: {
+          args: Prisma.BookingSpaceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingSpacePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BookingSpaceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingSpacePayload>
+        }
+        findMany: {
+          args: Prisma.BookingSpaceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingSpacePayload>[]
+        }
+        create: {
+          args: Prisma.BookingSpaceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingSpacePayload>
+        }
+        createMany: {
+          args: Prisma.BookingSpaceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.BookingSpaceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingSpacePayload>
+        }
+        update: {
+          args: Prisma.BookingSpaceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingSpacePayload>
+        }
+        deleteMany: {
+          args: Prisma.BookingSpaceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BookingSpaceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.BookingSpaceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookingSpacePayload>
+        }
+        aggregate: {
+          args: Prisma.BookingSpaceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBookingSpace>
+        }
+        groupBy: {
+          args: Prisma.BookingSpaceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BookingSpaceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BookingSpaceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BookingSpaceCountAggregateOutputType> | number
         }
       }
     }
@@ -1006,7 +1274,6 @@ export const WorkspaceScalarFieldEnum = {
   description: 'description',
   latitude: 'latitude',
   longitude: 'longitude',
-  imageUrls: 'imageUrls',
   status: 'status',
   createdAt: 'createdAt'
 } as const
@@ -1014,9 +1281,32 @@ export const WorkspaceScalarFieldEnum = {
 export type WorkspaceScalarFieldEnum = (typeof WorkspaceScalarFieldEnum)[keyof typeof WorkspaceScalarFieldEnum]
 
 
+export const WorkspaceImageScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  url: 'url'
+} as const
+
+export type WorkspaceImageScalarFieldEnum = (typeof WorkspaceImageScalarFieldEnum)[keyof typeof WorkspaceImageScalarFieldEnum]
+
+
+export const FloorScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  name: 'name',
+  imageUrl: 'imageUrl',
+  width: 'width',
+  height: 'height',
+  createdAt: 'createdAt'
+} as const
+
+export type FloorScalarFieldEnum = (typeof FloorScalarFieldEnum)[keyof typeof FloorScalarFieldEnum]
+
+
 export const SpaceScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
+  floorId: 'floorId',
   name: 'name',
   type: 'type',
   capacity: 'capacity',
@@ -1025,11 +1315,19 @@ export const SpaceScalarFieldEnum = {
   status: 'status',
   positionX: 'positionX',
   positionY: 'positionY',
-  imageUrls: 'imageUrls',
   createdAt: 'createdAt'
 } as const
 
 export type SpaceScalarFieldEnum = (typeof SpaceScalarFieldEnum)[keyof typeof SpaceScalarFieldEnum]
+
+
+export const SpaceImageScalarFieldEnum = {
+  id: 'id',
+  spaceId: 'spaceId',
+  url: 'url'
+} as const
+
+export type SpaceImageScalarFieldEnum = (typeof SpaceImageScalarFieldEnum)[keyof typeof SpaceImageScalarFieldEnum]
 
 
 export const AmenityScalarFieldEnum = {
@@ -1054,19 +1352,27 @@ export type SpaceAmenityScalarFieldEnum = (typeof SpaceAmenityScalarFieldEnum)[k
 export const BookingScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  spaceId: 'spaceId',
   bookerEmail: 'bookerEmail',
   bookerPhone: 'bookerPhone',
   bookerFullname: 'bookerFullname',
   startTime: 'startTime',
   endTime: 'endTime',
-  totalAmount: 'totalAmount',
   status: 'status',
   cancellationReason: 'cancellationReason',
   createdAt: 'createdAt'
 } as const
 
 export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]
+
+
+export const BookingSpaceScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  spaceId: 'spaceId',
+  status: 'status'
+} as const
+
+export type BookingSpaceScalarFieldEnum = (typeof BookingSpaceScalarFieldEnum)[keyof typeof BookingSpaceScalarFieldEnum]
 
 
 export const PaymentScalarFieldEnum = {
@@ -1104,13 +1410,6 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullsOrder = {
   first: 'first',
   last: 'last'
@@ -1132,23 +1431,6 @@ export const UserOrderByRelevanceFieldEnum = {
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
 
 
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
 export const WorkspaceOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1159,14 +1441,43 @@ export const WorkspaceOrderByRelevanceFieldEnum = {
 export type WorkspaceOrderByRelevanceFieldEnum = (typeof WorkspaceOrderByRelevanceFieldEnum)[keyof typeof WorkspaceOrderByRelevanceFieldEnum]
 
 
+export const WorkspaceImageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  url: 'url'
+} as const
+
+export type WorkspaceImageOrderByRelevanceFieldEnum = (typeof WorkspaceImageOrderByRelevanceFieldEnum)[keyof typeof WorkspaceImageOrderByRelevanceFieldEnum]
+
+
+export const FloorOrderByRelevanceFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  name: 'name',
+  imageUrl: 'imageUrl'
+} as const
+
+export type FloorOrderByRelevanceFieldEnum = (typeof FloorOrderByRelevanceFieldEnum)[keyof typeof FloorOrderByRelevanceFieldEnum]
+
+
 export const SpaceOrderByRelevanceFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
+  floorId: 'floorId',
   name: 'name',
   description: 'description'
 } as const
 
 export type SpaceOrderByRelevanceFieldEnum = (typeof SpaceOrderByRelevanceFieldEnum)[keyof typeof SpaceOrderByRelevanceFieldEnum]
+
+
+export const SpaceImageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  spaceId: 'spaceId',
+  url: 'url'
+} as const
+
+export type SpaceImageOrderByRelevanceFieldEnum = (typeof SpaceImageOrderByRelevanceFieldEnum)[keyof typeof SpaceImageOrderByRelevanceFieldEnum]
 
 
 export const AmenityOrderByRelevanceFieldEnum = {
@@ -1189,7 +1500,6 @@ export type SpaceAmenityOrderByRelevanceFieldEnum = (typeof SpaceAmenityOrderByR
 export const BookingOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
-  spaceId: 'spaceId',
   bookerEmail: 'bookerEmail',
   bookerPhone: 'bookerPhone',
   bookerFullname: 'bookerFullname',
@@ -1197,6 +1507,15 @@ export const BookingOrderByRelevanceFieldEnum = {
 } as const
 
 export type BookingOrderByRelevanceFieldEnum = (typeof BookingOrderByRelevanceFieldEnum)[keyof typeof BookingOrderByRelevanceFieldEnum]
+
+
+export const BookingSpaceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  spaceId: 'spaceId'
+} as const
+
+export type BookingSpaceOrderByRelevanceFieldEnum = (typeof BookingSpaceOrderByRelevanceFieldEnum)[keyof typeof BookingSpaceOrderByRelevanceFieldEnum]
 
 
 export const PaymentOrderByRelevanceFieldEnum = {
@@ -1267,20 +1586,6 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
 
 
 /**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
  * Reference to a field of type 'WorkspaceStatus'
  */
 export type EnumWorkspaceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceStatus'>
@@ -1288,16 +1593,16 @@ export type EnumWorkspaceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
- * Reference to a field of type 'SpaceType'
+ * Reference to a field of type 'Int'
  */
-export type EnumSpaceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SpaceType'>
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'SpaceType'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type EnumSpaceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SpaceType'>
     
 
 
@@ -1423,10 +1728,14 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   workspace?: Prisma.WorkspaceOmit
+  workspaceImage?: Prisma.WorkspaceImageOmit
+  floor?: Prisma.FloorOmit
   space?: Prisma.SpaceOmit
+  spaceImage?: Prisma.SpaceImageOmit
   amenity?: Prisma.AmenityOmit
   spaceAmenity?: Prisma.SpaceAmenityOmit
   booking?: Prisma.BookingOmit
+  bookingSpace?: Prisma.BookingSpaceOmit
   payment?: Prisma.PaymentOmit
   refund?: Prisma.RefundOmit
 }

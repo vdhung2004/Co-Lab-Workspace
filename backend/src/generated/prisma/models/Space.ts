@@ -43,6 +43,7 @@ export type SpaceSumAggregateOutputType = {
 export type SpaceMinAggregateOutputType = {
   id: string | null
   workspaceId: string | null
+  floorId: string | null
   name: string | null
   type: $Enums.SpaceType | null
   capacity: number | null
@@ -57,6 +58,7 @@ export type SpaceMinAggregateOutputType = {
 export type SpaceMaxAggregateOutputType = {
   id: string | null
   workspaceId: string | null
+  floorId: string | null
   name: string | null
   type: $Enums.SpaceType | null
   capacity: number | null
@@ -71,6 +73,7 @@ export type SpaceMaxAggregateOutputType = {
 export type SpaceCountAggregateOutputType = {
   id: number
   workspaceId: number
+  floorId: number
   name: number
   type: number
   capacity: number
@@ -79,7 +82,6 @@ export type SpaceCountAggregateOutputType = {
   status: number
   positionX: number
   positionY: number
-  imageUrls: number
   createdAt: number
   _all: number
 }
@@ -102,6 +104,7 @@ export type SpaceSumAggregateInputType = {
 export type SpaceMinAggregateInputType = {
   id?: true
   workspaceId?: true
+  floorId?: true
   name?: true
   type?: true
   capacity?: true
@@ -116,6 +119,7 @@ export type SpaceMinAggregateInputType = {
 export type SpaceMaxAggregateInputType = {
   id?: true
   workspaceId?: true
+  floorId?: true
   name?: true
   type?: true
   capacity?: true
@@ -130,6 +134,7 @@ export type SpaceMaxAggregateInputType = {
 export type SpaceCountAggregateInputType = {
   id?: true
   workspaceId?: true
+  floorId?: true
   name?: true
   type?: true
   capacity?: true
@@ -138,7 +143,6 @@ export type SpaceCountAggregateInputType = {
   status?: true
   positionX?: true
   positionY?: true
-  imageUrls?: true
   createdAt?: true
   _all?: true
 }
@@ -232,6 +236,7 @@ export type SpaceGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type SpaceGroupByOutputType = {
   id: string
   workspaceId: string
+  floorId: string | null
   name: string
   type: $Enums.SpaceType
   capacity: number
@@ -240,7 +245,6 @@ export type SpaceGroupByOutputType = {
   status: $Enums.SpaceStatus
   positionX: number | null
   positionY: number | null
-  imageUrls: runtime.JsonValue
   createdAt: Date
   _count: SpaceCountAggregateOutputType | null
   _avg: SpaceAvgAggregateOutputType | null
@@ -270,6 +274,7 @@ export type SpaceWhereInput = {
   NOT?: Prisma.SpaceWhereInput | Prisma.SpaceWhereInput[]
   id?: Prisma.StringFilter<"Space"> | string
   workspaceId?: Prisma.StringFilter<"Space"> | string
+  floorId?: Prisma.StringNullableFilter<"Space"> | string | null
   name?: Prisma.StringFilter<"Space"> | string
   type?: Prisma.EnumSpaceTypeFilter<"Space"> | $Enums.SpaceType
   capacity?: Prisma.IntFilter<"Space"> | number
@@ -278,16 +283,18 @@ export type SpaceWhereInput = {
   status?: Prisma.EnumSpaceStatusFilter<"Space"> | $Enums.SpaceStatus
   positionX?: Prisma.IntNullableFilter<"Space"> | number | null
   positionY?: Prisma.IntNullableFilter<"Space"> | number | null
-  imageUrls?: Prisma.JsonFilter<"Space">
   createdAt?: Prisma.DateTimeFilter<"Space"> | Date | string
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
-  bookings?: Prisma.BookingListRelationFilter
+  floor?: Prisma.XOR<Prisma.FloorNullableScalarRelationFilter, Prisma.FloorWhereInput> | null
+  bookings?: Prisma.BookingSpaceListRelationFilter
   amenities?: Prisma.SpaceAmenityListRelationFilter
+  images?: Prisma.SpaceImageListRelationFilter
 }
 
 export type SpaceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  floorId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
@@ -296,11 +303,12 @@ export type SpaceOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   positionX?: Prisma.SortOrderInput | Prisma.SortOrder
   positionY?: Prisma.SortOrderInput | Prisma.SortOrder
-  imageUrls?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   workspace?: Prisma.WorkspaceOrderByWithRelationInput
-  bookings?: Prisma.BookingOrderByRelationAggregateInput
+  floor?: Prisma.FloorOrderByWithRelationInput
+  bookings?: Prisma.BookingSpaceOrderByRelationAggregateInput
   amenities?: Prisma.SpaceAmenityOrderByRelationAggregateInput
+  images?: Prisma.SpaceImageOrderByRelationAggregateInput
   _relevance?: Prisma.SpaceOrderByRelevanceInput
 }
 
@@ -310,6 +318,7 @@ export type SpaceWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SpaceWhereInput[]
   NOT?: Prisma.SpaceWhereInput | Prisma.SpaceWhereInput[]
   workspaceId?: Prisma.StringFilter<"Space"> | string
+  floorId?: Prisma.StringNullableFilter<"Space"> | string | null
   name?: Prisma.StringFilter<"Space"> | string
   type?: Prisma.EnumSpaceTypeFilter<"Space"> | $Enums.SpaceType
   capacity?: Prisma.IntFilter<"Space"> | number
@@ -318,16 +327,18 @@ export type SpaceWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumSpaceStatusFilter<"Space"> | $Enums.SpaceStatus
   positionX?: Prisma.IntNullableFilter<"Space"> | number | null
   positionY?: Prisma.IntNullableFilter<"Space"> | number | null
-  imageUrls?: Prisma.JsonFilter<"Space">
   createdAt?: Prisma.DateTimeFilter<"Space"> | Date | string
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
-  bookings?: Prisma.BookingListRelationFilter
+  floor?: Prisma.XOR<Prisma.FloorNullableScalarRelationFilter, Prisma.FloorWhereInput> | null
+  bookings?: Prisma.BookingSpaceListRelationFilter
   amenities?: Prisma.SpaceAmenityListRelationFilter
+  images?: Prisma.SpaceImageListRelationFilter
 }, "id">
 
 export type SpaceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  floorId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
@@ -336,7 +347,6 @@ export type SpaceOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   positionX?: Prisma.SortOrderInput | Prisma.SortOrder
   positionY?: Prisma.SortOrderInput | Prisma.SortOrder
-  imageUrls?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.SpaceCountOrderByAggregateInput
   _avg?: Prisma.SpaceAvgOrderByAggregateInput
@@ -351,6 +361,7 @@ export type SpaceScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SpaceScalarWhereWithAggregatesInput | Prisma.SpaceScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Space"> | string
   workspaceId?: Prisma.StringWithAggregatesFilter<"Space"> | string
+  floorId?: Prisma.StringNullableWithAggregatesFilter<"Space"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Space"> | string
   type?: Prisma.EnumSpaceTypeWithAggregatesFilter<"Space"> | $Enums.SpaceType
   capacity?: Prisma.IntWithAggregatesFilter<"Space"> | number
@@ -359,7 +370,6 @@ export type SpaceScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumSpaceStatusWithAggregatesFilter<"Space"> | $Enums.SpaceStatus
   positionX?: Prisma.IntNullableWithAggregatesFilter<"Space"> | number | null
   positionY?: Prisma.IntNullableWithAggregatesFilter<"Space"> | number | null
-  imageUrls?: Prisma.JsonWithAggregatesFilter<"Space">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Space"> | Date | string
 }
 
@@ -373,16 +383,18 @@ export type SpaceCreateInput = {
   status: $Enums.SpaceStatus
   positionX?: number | null
   positionY?: number | null
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   workspace: Prisma.WorkspaceCreateNestedOneWithoutSpacesInput
-  bookings?: Prisma.BookingCreateNestedManyWithoutSpaceInput
+  floor?: Prisma.FloorCreateNestedOneWithoutSpacesInput
+  bookings?: Prisma.BookingSpaceCreateNestedManyWithoutSpaceInput
   amenities?: Prisma.SpaceAmenityCreateNestedManyWithoutSpaceInput
+  images?: Prisma.SpaceImageCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUncheckedCreateInput = {
   id?: string
   workspaceId: string
+  floorId?: string | null
   name: string
   type: $Enums.SpaceType
   capacity: number
@@ -391,10 +403,10 @@ export type SpaceUncheckedCreateInput = {
   status: $Enums.SpaceStatus
   positionX?: number | null
   positionY?: number | null
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
-  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutSpaceInput
+  bookings?: Prisma.BookingSpaceUncheckedCreateNestedManyWithoutSpaceInput
   amenities?: Prisma.SpaceAmenityUncheckedCreateNestedManyWithoutSpaceInput
+  images?: Prisma.SpaceImageUncheckedCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUpdateInput = {
@@ -407,16 +419,18 @@ export type SpaceUpdateInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutSpacesNestedInput
-  bookings?: Prisma.BookingUpdateManyWithoutSpaceNestedInput
+  floor?: Prisma.FloorUpdateOneWithoutSpacesNestedInput
+  bookings?: Prisma.BookingSpaceUpdateManyWithoutSpaceNestedInput
   amenities?: Prisma.SpaceAmenityUpdateManyWithoutSpaceNestedInput
+  images?: Prisma.SpaceImageUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  floorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -425,15 +439,16 @@ export type SpaceUncheckedUpdateInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  bookings?: Prisma.BookingUncheckedUpdateManyWithoutSpaceNestedInput
+  bookings?: Prisma.BookingSpaceUncheckedUpdateManyWithoutSpaceNestedInput
   amenities?: Prisma.SpaceAmenityUncheckedUpdateManyWithoutSpaceNestedInput
+  images?: Prisma.SpaceImageUncheckedUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceCreateManyInput = {
   id?: string
   workspaceId: string
+  floorId?: string | null
   name: string
   type: $Enums.SpaceType
   capacity: number
@@ -442,7 +457,6 @@ export type SpaceCreateManyInput = {
   status: $Enums.SpaceStatus
   positionX?: number | null
   positionY?: number | null
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -456,13 +470,13 @@ export type SpaceUpdateManyMutationInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SpaceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  floorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -471,7 +485,6 @@ export type SpaceUncheckedUpdateManyInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -494,6 +507,7 @@ export type SpaceOrderByRelevanceInput = {
 export type SpaceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  floorId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
@@ -502,7 +516,6 @@ export type SpaceCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
-  imageUrls?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -516,6 +529,7 @@ export type SpaceAvgOrderByAggregateInput = {
 export type SpaceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  floorId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
@@ -530,6 +544,7 @@ export type SpaceMaxOrderByAggregateInput = {
 export type SpaceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  floorId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
@@ -595,6 +610,48 @@ export type SpaceUncheckedUpdateManyWithoutWorkspaceNestedInput = {
   deleteMany?: Prisma.SpaceScalarWhereInput | Prisma.SpaceScalarWhereInput[]
 }
 
+export type SpaceCreateNestedManyWithoutFloorInput = {
+  create?: Prisma.XOR<Prisma.SpaceCreateWithoutFloorInput, Prisma.SpaceUncheckedCreateWithoutFloorInput> | Prisma.SpaceCreateWithoutFloorInput[] | Prisma.SpaceUncheckedCreateWithoutFloorInput[]
+  connectOrCreate?: Prisma.SpaceCreateOrConnectWithoutFloorInput | Prisma.SpaceCreateOrConnectWithoutFloorInput[]
+  createMany?: Prisma.SpaceCreateManyFloorInputEnvelope
+  connect?: Prisma.SpaceWhereUniqueInput | Prisma.SpaceWhereUniqueInput[]
+}
+
+export type SpaceUncheckedCreateNestedManyWithoutFloorInput = {
+  create?: Prisma.XOR<Prisma.SpaceCreateWithoutFloorInput, Prisma.SpaceUncheckedCreateWithoutFloorInput> | Prisma.SpaceCreateWithoutFloorInput[] | Prisma.SpaceUncheckedCreateWithoutFloorInput[]
+  connectOrCreate?: Prisma.SpaceCreateOrConnectWithoutFloorInput | Prisma.SpaceCreateOrConnectWithoutFloorInput[]
+  createMany?: Prisma.SpaceCreateManyFloorInputEnvelope
+  connect?: Prisma.SpaceWhereUniqueInput | Prisma.SpaceWhereUniqueInput[]
+}
+
+export type SpaceUpdateManyWithoutFloorNestedInput = {
+  create?: Prisma.XOR<Prisma.SpaceCreateWithoutFloorInput, Prisma.SpaceUncheckedCreateWithoutFloorInput> | Prisma.SpaceCreateWithoutFloorInput[] | Prisma.SpaceUncheckedCreateWithoutFloorInput[]
+  connectOrCreate?: Prisma.SpaceCreateOrConnectWithoutFloorInput | Prisma.SpaceCreateOrConnectWithoutFloorInput[]
+  upsert?: Prisma.SpaceUpsertWithWhereUniqueWithoutFloorInput | Prisma.SpaceUpsertWithWhereUniqueWithoutFloorInput[]
+  createMany?: Prisma.SpaceCreateManyFloorInputEnvelope
+  set?: Prisma.SpaceWhereUniqueInput | Prisma.SpaceWhereUniqueInput[]
+  disconnect?: Prisma.SpaceWhereUniqueInput | Prisma.SpaceWhereUniqueInput[]
+  delete?: Prisma.SpaceWhereUniqueInput | Prisma.SpaceWhereUniqueInput[]
+  connect?: Prisma.SpaceWhereUniqueInput | Prisma.SpaceWhereUniqueInput[]
+  update?: Prisma.SpaceUpdateWithWhereUniqueWithoutFloorInput | Prisma.SpaceUpdateWithWhereUniqueWithoutFloorInput[]
+  updateMany?: Prisma.SpaceUpdateManyWithWhereWithoutFloorInput | Prisma.SpaceUpdateManyWithWhereWithoutFloorInput[]
+  deleteMany?: Prisma.SpaceScalarWhereInput | Prisma.SpaceScalarWhereInput[]
+}
+
+export type SpaceUncheckedUpdateManyWithoutFloorNestedInput = {
+  create?: Prisma.XOR<Prisma.SpaceCreateWithoutFloorInput, Prisma.SpaceUncheckedCreateWithoutFloorInput> | Prisma.SpaceCreateWithoutFloorInput[] | Prisma.SpaceUncheckedCreateWithoutFloorInput[]
+  connectOrCreate?: Prisma.SpaceCreateOrConnectWithoutFloorInput | Prisma.SpaceCreateOrConnectWithoutFloorInput[]
+  upsert?: Prisma.SpaceUpsertWithWhereUniqueWithoutFloorInput | Prisma.SpaceUpsertWithWhereUniqueWithoutFloorInput[]
+  createMany?: Prisma.SpaceCreateManyFloorInputEnvelope
+  set?: Prisma.SpaceWhereUniqueInput | Prisma.SpaceWhereUniqueInput[]
+  disconnect?: Prisma.SpaceWhereUniqueInput | Prisma.SpaceWhereUniqueInput[]
+  delete?: Prisma.SpaceWhereUniqueInput | Prisma.SpaceWhereUniqueInput[]
+  connect?: Prisma.SpaceWhereUniqueInput | Prisma.SpaceWhereUniqueInput[]
+  update?: Prisma.SpaceUpdateWithWhereUniqueWithoutFloorInput | Prisma.SpaceUpdateWithWhereUniqueWithoutFloorInput[]
+  updateMany?: Prisma.SpaceUpdateManyWithWhereWithoutFloorInput | Prisma.SpaceUpdateManyWithWhereWithoutFloorInput[]
+  deleteMany?: Prisma.SpaceScalarWhereInput | Prisma.SpaceScalarWhereInput[]
+}
+
 export type EnumSpaceTypeFieldUpdateOperationsInput = {
   set?: $Enums.SpaceType
 }
@@ -619,12 +676,18 @@ export type EnumSpaceStatusFieldUpdateOperationsInput = {
   set?: $Enums.SpaceStatus
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type SpaceCreateNestedOneWithoutImagesInput = {
+  create?: Prisma.XOR<Prisma.SpaceCreateWithoutImagesInput, Prisma.SpaceUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.SpaceCreateOrConnectWithoutImagesInput
+  connect?: Prisma.SpaceWhereUniqueInput
+}
+
+export type SpaceUpdateOneRequiredWithoutImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.SpaceCreateWithoutImagesInput, Prisma.SpaceUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.SpaceCreateOrConnectWithoutImagesInput
+  upsert?: Prisma.SpaceUpsertWithoutImagesInput
+  connect?: Prisma.SpaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SpaceUpdateToOneWithWhereWithoutImagesInput, Prisma.SpaceUpdateWithoutImagesInput>, Prisma.SpaceUncheckedUpdateWithoutImagesInput>
 }
 
 export type SpaceCreateNestedOneWithoutAmenitiesInput = {
@@ -665,14 +728,16 @@ export type SpaceCreateWithoutWorkspaceInput = {
   status: $Enums.SpaceStatus
   positionX?: number | null
   positionY?: number | null
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
-  bookings?: Prisma.BookingCreateNestedManyWithoutSpaceInput
+  floor?: Prisma.FloorCreateNestedOneWithoutSpacesInput
+  bookings?: Prisma.BookingSpaceCreateNestedManyWithoutSpaceInput
   amenities?: Prisma.SpaceAmenityCreateNestedManyWithoutSpaceInput
+  images?: Prisma.SpaceImageCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUncheckedCreateWithoutWorkspaceInput = {
   id?: string
+  floorId?: string | null
   name: string
   type: $Enums.SpaceType
   capacity: number
@@ -681,10 +746,10 @@ export type SpaceUncheckedCreateWithoutWorkspaceInput = {
   status: $Enums.SpaceStatus
   positionX?: number | null
   positionY?: number | null
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
-  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutSpaceInput
+  bookings?: Prisma.BookingSpaceUncheckedCreateNestedManyWithoutSpaceInput
   amenities?: Prisma.SpaceAmenityUncheckedCreateNestedManyWithoutSpaceInput
+  images?: Prisma.SpaceImageUncheckedCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceCreateOrConnectWithoutWorkspaceInput = {
@@ -719,6 +784,7 @@ export type SpaceScalarWhereInput = {
   NOT?: Prisma.SpaceScalarWhereInput | Prisma.SpaceScalarWhereInput[]
   id?: Prisma.StringFilter<"Space"> | string
   workspaceId?: Prisma.StringFilter<"Space"> | string
+  floorId?: Prisma.StringNullableFilter<"Space"> | string | null
   name?: Prisma.StringFilter<"Space"> | string
   type?: Prisma.EnumSpaceTypeFilter<"Space"> | $Enums.SpaceType
   capacity?: Prisma.IntFilter<"Space"> | number
@@ -727,8 +793,151 @@ export type SpaceScalarWhereInput = {
   status?: Prisma.EnumSpaceStatusFilter<"Space"> | $Enums.SpaceStatus
   positionX?: Prisma.IntNullableFilter<"Space"> | number | null
   positionY?: Prisma.IntNullableFilter<"Space"> | number | null
-  imageUrls?: Prisma.JsonFilter<"Space">
   createdAt?: Prisma.DateTimeFilter<"Space"> | Date | string
+}
+
+export type SpaceCreateWithoutFloorInput = {
+  id?: string
+  name: string
+  type: $Enums.SpaceType
+  capacity: number
+  priceHourly: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description: string
+  status: $Enums.SpaceStatus
+  positionX?: number | null
+  positionY?: number | null
+  createdAt?: Date | string
+  workspace: Prisma.WorkspaceCreateNestedOneWithoutSpacesInput
+  bookings?: Prisma.BookingSpaceCreateNestedManyWithoutSpaceInput
+  amenities?: Prisma.SpaceAmenityCreateNestedManyWithoutSpaceInput
+  images?: Prisma.SpaceImageCreateNestedManyWithoutSpaceInput
+}
+
+export type SpaceUncheckedCreateWithoutFloorInput = {
+  id?: string
+  workspaceId: string
+  name: string
+  type: $Enums.SpaceType
+  capacity: number
+  priceHourly: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description: string
+  status: $Enums.SpaceStatus
+  positionX?: number | null
+  positionY?: number | null
+  createdAt?: Date | string
+  bookings?: Prisma.BookingSpaceUncheckedCreateNestedManyWithoutSpaceInput
+  amenities?: Prisma.SpaceAmenityUncheckedCreateNestedManyWithoutSpaceInput
+  images?: Prisma.SpaceImageUncheckedCreateNestedManyWithoutSpaceInput
+}
+
+export type SpaceCreateOrConnectWithoutFloorInput = {
+  where: Prisma.SpaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.SpaceCreateWithoutFloorInput, Prisma.SpaceUncheckedCreateWithoutFloorInput>
+}
+
+export type SpaceCreateManyFloorInputEnvelope = {
+  data: Prisma.SpaceCreateManyFloorInput | Prisma.SpaceCreateManyFloorInput[]
+  skipDuplicates?: boolean
+}
+
+export type SpaceUpsertWithWhereUniqueWithoutFloorInput = {
+  where: Prisma.SpaceWhereUniqueInput
+  update: Prisma.XOR<Prisma.SpaceUpdateWithoutFloorInput, Prisma.SpaceUncheckedUpdateWithoutFloorInput>
+  create: Prisma.XOR<Prisma.SpaceCreateWithoutFloorInput, Prisma.SpaceUncheckedCreateWithoutFloorInput>
+}
+
+export type SpaceUpdateWithWhereUniqueWithoutFloorInput = {
+  where: Prisma.SpaceWhereUniqueInput
+  data: Prisma.XOR<Prisma.SpaceUpdateWithoutFloorInput, Prisma.SpaceUncheckedUpdateWithoutFloorInput>
+}
+
+export type SpaceUpdateManyWithWhereWithoutFloorInput = {
+  where: Prisma.SpaceScalarWhereInput
+  data: Prisma.XOR<Prisma.SpaceUpdateManyMutationInput, Prisma.SpaceUncheckedUpdateManyWithoutFloorInput>
+}
+
+export type SpaceCreateWithoutImagesInput = {
+  id?: string
+  name: string
+  type: $Enums.SpaceType
+  capacity: number
+  priceHourly: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description: string
+  status: $Enums.SpaceStatus
+  positionX?: number | null
+  positionY?: number | null
+  createdAt?: Date | string
+  workspace: Prisma.WorkspaceCreateNestedOneWithoutSpacesInput
+  floor?: Prisma.FloorCreateNestedOneWithoutSpacesInput
+  bookings?: Prisma.BookingSpaceCreateNestedManyWithoutSpaceInput
+  amenities?: Prisma.SpaceAmenityCreateNestedManyWithoutSpaceInput
+}
+
+export type SpaceUncheckedCreateWithoutImagesInput = {
+  id?: string
+  workspaceId: string
+  floorId?: string | null
+  name: string
+  type: $Enums.SpaceType
+  capacity: number
+  priceHourly: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description: string
+  status: $Enums.SpaceStatus
+  positionX?: number | null
+  positionY?: number | null
+  createdAt?: Date | string
+  bookings?: Prisma.BookingSpaceUncheckedCreateNestedManyWithoutSpaceInput
+  amenities?: Prisma.SpaceAmenityUncheckedCreateNestedManyWithoutSpaceInput
+}
+
+export type SpaceCreateOrConnectWithoutImagesInput = {
+  where: Prisma.SpaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.SpaceCreateWithoutImagesInput, Prisma.SpaceUncheckedCreateWithoutImagesInput>
+}
+
+export type SpaceUpsertWithoutImagesInput = {
+  update: Prisma.XOR<Prisma.SpaceUpdateWithoutImagesInput, Prisma.SpaceUncheckedUpdateWithoutImagesInput>
+  create: Prisma.XOR<Prisma.SpaceCreateWithoutImagesInput, Prisma.SpaceUncheckedCreateWithoutImagesInput>
+  where?: Prisma.SpaceWhereInput
+}
+
+export type SpaceUpdateToOneWithWhereWithoutImagesInput = {
+  where?: Prisma.SpaceWhereInput
+  data: Prisma.XOR<Prisma.SpaceUpdateWithoutImagesInput, Prisma.SpaceUncheckedUpdateWithoutImagesInput>
+}
+
+export type SpaceUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  priceHourly?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
+  positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutSpacesNestedInput
+  floor?: Prisma.FloorUpdateOneWithoutSpacesNestedInput
+  bookings?: Prisma.BookingSpaceUpdateManyWithoutSpaceNestedInput
+  amenities?: Prisma.SpaceAmenityUpdateManyWithoutSpaceNestedInput
+}
+
+export type SpaceUncheckedUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  floorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  priceHourly?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
+  positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bookings?: Prisma.BookingSpaceUncheckedUpdateManyWithoutSpaceNestedInput
+  amenities?: Prisma.SpaceAmenityUncheckedUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceCreateWithoutAmenitiesInput = {
@@ -741,15 +950,17 @@ export type SpaceCreateWithoutAmenitiesInput = {
   status: $Enums.SpaceStatus
   positionX?: number | null
   positionY?: number | null
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   workspace: Prisma.WorkspaceCreateNestedOneWithoutSpacesInput
-  bookings?: Prisma.BookingCreateNestedManyWithoutSpaceInput
+  floor?: Prisma.FloorCreateNestedOneWithoutSpacesInput
+  bookings?: Prisma.BookingSpaceCreateNestedManyWithoutSpaceInput
+  images?: Prisma.SpaceImageCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUncheckedCreateWithoutAmenitiesInput = {
   id?: string
   workspaceId: string
+  floorId?: string | null
   name: string
   type: $Enums.SpaceType
   capacity: number
@@ -758,9 +969,9 @@ export type SpaceUncheckedCreateWithoutAmenitiesInput = {
   status: $Enums.SpaceStatus
   positionX?: number | null
   positionY?: number | null
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
-  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutSpaceInput
+  bookings?: Prisma.BookingSpaceUncheckedCreateNestedManyWithoutSpaceInput
+  images?: Prisma.SpaceImageUncheckedCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceCreateOrConnectWithoutAmenitiesInput = {
@@ -789,15 +1000,17 @@ export type SpaceUpdateWithoutAmenitiesInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutSpacesNestedInput
-  bookings?: Prisma.BookingUpdateManyWithoutSpaceNestedInput
+  floor?: Prisma.FloorUpdateOneWithoutSpacesNestedInput
+  bookings?: Prisma.BookingSpaceUpdateManyWithoutSpaceNestedInput
+  images?: Prisma.SpaceImageUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceUncheckedUpdateWithoutAmenitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  floorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -806,9 +1019,9 @@ export type SpaceUncheckedUpdateWithoutAmenitiesInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  bookings?: Prisma.BookingUncheckedUpdateManyWithoutSpaceNestedInput
+  bookings?: Prisma.BookingSpaceUncheckedUpdateManyWithoutSpaceNestedInput
+  images?: Prisma.SpaceImageUncheckedUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceCreateWithoutBookingsInput = {
@@ -821,15 +1034,17 @@ export type SpaceCreateWithoutBookingsInput = {
   status: $Enums.SpaceStatus
   positionX?: number | null
   positionY?: number | null
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   workspace: Prisma.WorkspaceCreateNestedOneWithoutSpacesInput
+  floor?: Prisma.FloorCreateNestedOneWithoutSpacesInput
   amenities?: Prisma.SpaceAmenityCreateNestedManyWithoutSpaceInput
+  images?: Prisma.SpaceImageCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUncheckedCreateWithoutBookingsInput = {
   id?: string
   workspaceId: string
+  floorId?: string | null
   name: string
   type: $Enums.SpaceType
   capacity: number
@@ -838,9 +1053,9 @@ export type SpaceUncheckedCreateWithoutBookingsInput = {
   status: $Enums.SpaceStatus
   positionX?: number | null
   positionY?: number | null
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   amenities?: Prisma.SpaceAmenityUncheckedCreateNestedManyWithoutSpaceInput
+  images?: Prisma.SpaceImageUncheckedCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceCreateOrConnectWithoutBookingsInput = {
@@ -869,15 +1084,17 @@ export type SpaceUpdateWithoutBookingsInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutSpacesNestedInput
+  floor?: Prisma.FloorUpdateOneWithoutSpacesNestedInput
   amenities?: Prisma.SpaceAmenityUpdateManyWithoutSpaceNestedInput
+  images?: Prisma.SpaceImageUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceUncheckedUpdateWithoutBookingsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  floorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -886,13 +1103,14 @@ export type SpaceUncheckedUpdateWithoutBookingsInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   amenities?: Prisma.SpaceAmenityUncheckedUpdateManyWithoutSpaceNestedInput
+  images?: Prisma.SpaceImageUncheckedUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceCreateManyWorkspaceInput = {
   id?: string
+  floorId?: string | null
   name: string
   type: $Enums.SpaceType
   capacity: number
@@ -901,7 +1119,6 @@ export type SpaceCreateManyWorkspaceInput = {
   status: $Enums.SpaceStatus
   positionX?: number | null
   positionY?: number | null
-  imageUrls: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -915,14 +1132,16 @@ export type SpaceUpdateWithoutWorkspaceInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  bookings?: Prisma.BookingUpdateManyWithoutSpaceNestedInput
+  floor?: Prisma.FloorUpdateOneWithoutSpacesNestedInput
+  bookings?: Prisma.BookingSpaceUpdateManyWithoutSpaceNestedInput
   amenities?: Prisma.SpaceAmenityUpdateManyWithoutSpaceNestedInput
+  images?: Prisma.SpaceImageUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceUncheckedUpdateWithoutWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  floorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
@@ -931,13 +1150,41 @@ export type SpaceUncheckedUpdateWithoutWorkspaceInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  bookings?: Prisma.BookingUncheckedUpdateManyWithoutSpaceNestedInput
+  bookings?: Prisma.BookingSpaceUncheckedUpdateManyWithoutSpaceNestedInput
   amenities?: Prisma.SpaceAmenityUncheckedUpdateManyWithoutSpaceNestedInput
+  images?: Prisma.SpaceImageUncheckedUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceUncheckedUpdateManyWithoutWorkspaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  floorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  priceHourly?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
+  positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SpaceCreateManyFloorInput = {
+  id?: string
+  workspaceId: string
+  name: string
+  type: $Enums.SpaceType
+  capacity: number
+  priceHourly: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description: string
+  status: $Enums.SpaceStatus
+  positionX?: number | null
+  positionY?: number | null
+  createdAt?: Date | string
+}
+
+export type SpaceUpdateWithoutFloorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
@@ -947,7 +1194,41 @@ export type SpaceUncheckedUpdateManyWithoutWorkspaceInput = {
   status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
   positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  imageUrls?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutSpacesNestedInput
+  bookings?: Prisma.BookingSpaceUpdateManyWithoutSpaceNestedInput
+  amenities?: Prisma.SpaceAmenityUpdateManyWithoutSpaceNestedInput
+  images?: Prisma.SpaceImageUpdateManyWithoutSpaceNestedInput
+}
+
+export type SpaceUncheckedUpdateWithoutFloorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  priceHourly?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
+  positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bookings?: Prisma.BookingSpaceUncheckedUpdateManyWithoutSpaceNestedInput
+  amenities?: Prisma.SpaceAmenityUncheckedUpdateManyWithoutSpaceNestedInput
+  images?: Prisma.SpaceImageUncheckedUpdateManyWithoutSpaceNestedInput
+}
+
+export type SpaceUncheckedUpdateManyWithoutFloorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumSpaceTypeFieldUpdateOperationsInput | $Enums.SpaceType
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  priceHourly?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSpaceStatusFieldUpdateOperationsInput | $Enums.SpaceStatus
+  positionX?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  positionY?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -959,11 +1240,13 @@ export type SpaceUncheckedUpdateManyWithoutWorkspaceInput = {
 export type SpaceCountOutputType = {
   bookings: number
   amenities: number
+  images: number
 }
 
 export type SpaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bookings?: boolean | SpaceCountOutputTypeCountBookingsArgs
   amenities?: boolean | SpaceCountOutputTypeCountAmenitiesArgs
+  images?: boolean | SpaceCountOutputTypeCountImagesArgs
 }
 
 /**
@@ -980,7 +1263,7 @@ export type SpaceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
  * SpaceCountOutputType without action
  */
 export type SpaceCountOutputTypeCountBookingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.BookingWhereInput
+  where?: Prisma.BookingSpaceWhereInput
 }
 
 /**
@@ -990,10 +1273,18 @@ export type SpaceCountOutputTypeCountAmenitiesArgs<ExtArgs extends runtime.Types
   where?: Prisma.SpaceAmenityWhereInput
 }
 
+/**
+ * SpaceCountOutputType without action
+ */
+export type SpaceCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SpaceImageWhereInput
+}
+
 
 export type SpaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   workspaceId?: boolean
+  floorId?: boolean
   name?: boolean
   type?: boolean
   capacity?: boolean
@@ -1002,11 +1293,12 @@ export type SpaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   status?: boolean
   positionX?: boolean
   positionY?: boolean
-  imageUrls?: boolean
   createdAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  floor?: boolean | Prisma.Space$floorArgs<ExtArgs>
   bookings?: boolean | Prisma.Space$bookingsArgs<ExtArgs>
   amenities?: boolean | Prisma.Space$amenitiesArgs<ExtArgs>
+  images?: boolean | Prisma.Space$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.SpaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["space"]>
 
@@ -1015,6 +1307,7 @@ export type SpaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type SpaceSelectScalar = {
   id?: boolean
   workspaceId?: boolean
+  floorId?: boolean
   name?: boolean
   type?: boolean
   capacity?: boolean
@@ -1023,15 +1316,16 @@ export type SpaceSelectScalar = {
   status?: boolean
   positionX?: boolean
   positionY?: boolean
-  imageUrls?: boolean
   createdAt?: boolean
 }
 
-export type SpaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "name" | "type" | "capacity" | "priceHourly" | "description" | "status" | "positionX" | "positionY" | "imageUrls" | "createdAt", ExtArgs["result"]["space"]>
+export type SpaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "floorId" | "name" | "type" | "capacity" | "priceHourly" | "description" | "status" | "positionX" | "positionY" | "createdAt", ExtArgs["result"]["space"]>
 export type SpaceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  floor?: boolean | Prisma.Space$floorArgs<ExtArgs>
   bookings?: boolean | Prisma.Space$bookingsArgs<ExtArgs>
   amenities?: boolean | Prisma.Space$amenitiesArgs<ExtArgs>
+  images?: boolean | Prisma.Space$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.SpaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1039,12 +1333,15 @@ export type $SpacePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Space"
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
-    bookings: Prisma.$BookingPayload<ExtArgs>[]
+    floor: Prisma.$FloorPayload<ExtArgs> | null
+    bookings: Prisma.$BookingSpacePayload<ExtArgs>[]
     amenities: Prisma.$SpaceAmenityPayload<ExtArgs>[]
+    images: Prisma.$SpaceImagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     workspaceId: string
+    floorId: string | null
     name: string
     type: $Enums.SpaceType
     capacity: number
@@ -1053,7 +1350,6 @@ export type $SpacePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     status: $Enums.SpaceStatus
     positionX: number | null
     positionY: number | null
-    imageUrls: runtime.JsonValue
     createdAt: Date
   }, ExtArgs["result"]["space"]>
   composites: {}
@@ -1396,8 +1692,10 @@ readonly fields: SpaceFieldRefs;
 export interface Prisma__SpaceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  bookings<T extends Prisma.Space$bookingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Space$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  floor<T extends Prisma.Space$floorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Space$floorArgs<ExtArgs>>): Prisma.Prisma__FloorClient<runtime.Types.Result.GetResult<Prisma.$FloorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  bookings<T extends Prisma.Space$bookingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Space$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookingSpacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   amenities<T extends Prisma.Space$amenitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Space$amenitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SpaceAmenityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  images<T extends Prisma.Space$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Space$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SpaceImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1429,6 +1727,7 @@ export interface Prisma__SpaceClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface SpaceFieldRefs {
   readonly id: Prisma.FieldRef<"Space", 'String'>
   readonly workspaceId: Prisma.FieldRef<"Space", 'String'>
+  readonly floorId: Prisma.FieldRef<"Space", 'String'>
   readonly name: Prisma.FieldRef<"Space", 'String'>
   readonly type: Prisma.FieldRef<"Space", 'SpaceType'>
   readonly capacity: Prisma.FieldRef<"Space", 'Int'>
@@ -1437,7 +1736,6 @@ export interface SpaceFieldRefs {
   readonly status: Prisma.FieldRef<"Space", 'SpaceStatus'>
   readonly positionX: Prisma.FieldRef<"Space", 'Int'>
   readonly positionY: Prisma.FieldRef<"Space", 'Int'>
-  readonly imageUrls: Prisma.FieldRef<"Space", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Space", 'DateTime'>
 }
     
@@ -1782,27 +2080,46 @@ export type SpaceDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
+ * Space.floor
+ */
+export type Space$floorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Floor
+   */
+  select?: Prisma.FloorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Floor
+   */
+  omit?: Prisma.FloorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorInclude<ExtArgs> | null
+  where?: Prisma.FloorWhereInput
+}
+
+/**
  * Space.bookings
  */
 export type Space$bookingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Booking
+   * Select specific fields to fetch from the BookingSpace
    */
-  select?: Prisma.BookingSelect<ExtArgs> | null
+  select?: Prisma.BookingSpaceSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Booking
+   * Omit specific fields from the BookingSpace
    */
-  omit?: Prisma.BookingOmit<ExtArgs> | null
+  omit?: Prisma.BookingSpaceOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.BookingInclude<ExtArgs> | null
-  where?: Prisma.BookingWhereInput
-  orderBy?: Prisma.BookingOrderByWithRelationInput | Prisma.BookingOrderByWithRelationInput[]
-  cursor?: Prisma.BookingWhereUniqueInput
+  include?: Prisma.BookingSpaceInclude<ExtArgs> | null
+  where?: Prisma.BookingSpaceWhereInput
+  orderBy?: Prisma.BookingSpaceOrderByWithRelationInput | Prisma.BookingSpaceOrderByWithRelationInput[]
+  cursor?: Prisma.BookingSpaceWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.BookingScalarFieldEnum | Prisma.BookingScalarFieldEnum[]
+  distinct?: Prisma.BookingSpaceScalarFieldEnum | Prisma.BookingSpaceScalarFieldEnum[]
 }
 
 /**
@@ -1827,6 +2144,30 @@ export type Space$amenitiesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.SpaceAmenityScalarFieldEnum | Prisma.SpaceAmenityScalarFieldEnum[]
+}
+
+/**
+ * Space.images
+ */
+export type Space$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SpaceImage
+   */
+  select?: Prisma.SpaceImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SpaceImage
+   */
+  omit?: Prisma.SpaceImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SpaceImageInclude<ExtArgs> | null
+  where?: Prisma.SpaceImageWhereInput
+  orderBy?: Prisma.SpaceImageOrderByWithRelationInput | Prisma.SpaceImageOrderByWithRelationInput[]
+  cursor?: Prisma.SpaceImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SpaceImageScalarFieldEnum | Prisma.SpaceImageScalarFieldEnum[]
 }
 
 /**

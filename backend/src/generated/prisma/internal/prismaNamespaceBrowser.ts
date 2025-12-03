@@ -53,10 +53,14 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Workspace: 'Workspace',
+  WorkspaceImage: 'WorkspaceImage',
+  Floor: 'Floor',
   Space: 'Space',
+  SpaceImage: 'SpaceImage',
   Amenity: 'Amenity',
   SpaceAmenity: 'SpaceAmenity',
   Booking: 'Booking',
+  BookingSpace: 'BookingSpace',
   Payment: 'Payment',
   Refund: 'Refund'
 } as const
@@ -105,7 +109,6 @@ export const WorkspaceScalarFieldEnum = {
   description: 'description',
   latitude: 'latitude',
   longitude: 'longitude',
-  imageUrls: 'imageUrls',
   status: 'status',
   createdAt: 'createdAt'
 } as const
@@ -113,9 +116,32 @@ export const WorkspaceScalarFieldEnum = {
 export type WorkspaceScalarFieldEnum = (typeof WorkspaceScalarFieldEnum)[keyof typeof WorkspaceScalarFieldEnum]
 
 
+export const WorkspaceImageScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  url: 'url'
+} as const
+
+export type WorkspaceImageScalarFieldEnum = (typeof WorkspaceImageScalarFieldEnum)[keyof typeof WorkspaceImageScalarFieldEnum]
+
+
+export const FloorScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  name: 'name',
+  imageUrl: 'imageUrl',
+  width: 'width',
+  height: 'height',
+  createdAt: 'createdAt'
+} as const
+
+export type FloorScalarFieldEnum = (typeof FloorScalarFieldEnum)[keyof typeof FloorScalarFieldEnum]
+
+
 export const SpaceScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
+  floorId: 'floorId',
   name: 'name',
   type: 'type',
   capacity: 'capacity',
@@ -124,11 +150,19 @@ export const SpaceScalarFieldEnum = {
   status: 'status',
   positionX: 'positionX',
   positionY: 'positionY',
-  imageUrls: 'imageUrls',
   createdAt: 'createdAt'
 } as const
 
 export type SpaceScalarFieldEnum = (typeof SpaceScalarFieldEnum)[keyof typeof SpaceScalarFieldEnum]
+
+
+export const SpaceImageScalarFieldEnum = {
+  id: 'id',
+  spaceId: 'spaceId',
+  url: 'url'
+} as const
+
+export type SpaceImageScalarFieldEnum = (typeof SpaceImageScalarFieldEnum)[keyof typeof SpaceImageScalarFieldEnum]
 
 
 export const AmenityScalarFieldEnum = {
@@ -153,19 +187,27 @@ export type SpaceAmenityScalarFieldEnum = (typeof SpaceAmenityScalarFieldEnum)[k
 export const BookingScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  spaceId: 'spaceId',
   bookerEmail: 'bookerEmail',
   bookerPhone: 'bookerPhone',
   bookerFullname: 'bookerFullname',
   startTime: 'startTime',
   endTime: 'endTime',
-  totalAmount: 'totalAmount',
   status: 'status',
   cancellationReason: 'cancellationReason',
   createdAt: 'createdAt'
 } as const
 
 export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]
+
+
+export const BookingSpaceScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  spaceId: 'spaceId',
+  status: 'status'
+} as const
+
+export type BookingSpaceScalarFieldEnum = (typeof BookingSpaceScalarFieldEnum)[keyof typeof BookingSpaceScalarFieldEnum]
 
 
 export const PaymentScalarFieldEnum = {
@@ -203,13 +245,6 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: 'JsonNull'
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullsOrder = {
   first: 'first',
   last: 'last'
@@ -231,23 +266,6 @@ export const UserOrderByRelevanceFieldEnum = {
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
 
 
-export const JsonNullValueFilter = {
-  DbNull: 'DbNull',
-  JsonNull: 'JsonNull',
-  AnyNull: 'AnyNull'
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
 export const WorkspaceOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
@@ -258,14 +276,43 @@ export const WorkspaceOrderByRelevanceFieldEnum = {
 export type WorkspaceOrderByRelevanceFieldEnum = (typeof WorkspaceOrderByRelevanceFieldEnum)[keyof typeof WorkspaceOrderByRelevanceFieldEnum]
 
 
+export const WorkspaceImageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  url: 'url'
+} as const
+
+export type WorkspaceImageOrderByRelevanceFieldEnum = (typeof WorkspaceImageOrderByRelevanceFieldEnum)[keyof typeof WorkspaceImageOrderByRelevanceFieldEnum]
+
+
+export const FloorOrderByRelevanceFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  name: 'name',
+  imageUrl: 'imageUrl'
+} as const
+
+export type FloorOrderByRelevanceFieldEnum = (typeof FloorOrderByRelevanceFieldEnum)[keyof typeof FloorOrderByRelevanceFieldEnum]
+
+
 export const SpaceOrderByRelevanceFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
+  floorId: 'floorId',
   name: 'name',
   description: 'description'
 } as const
 
 export type SpaceOrderByRelevanceFieldEnum = (typeof SpaceOrderByRelevanceFieldEnum)[keyof typeof SpaceOrderByRelevanceFieldEnum]
+
+
+export const SpaceImageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  spaceId: 'spaceId',
+  url: 'url'
+} as const
+
+export type SpaceImageOrderByRelevanceFieldEnum = (typeof SpaceImageOrderByRelevanceFieldEnum)[keyof typeof SpaceImageOrderByRelevanceFieldEnum]
 
 
 export const AmenityOrderByRelevanceFieldEnum = {
@@ -288,7 +335,6 @@ export type SpaceAmenityOrderByRelevanceFieldEnum = (typeof SpaceAmenityOrderByR
 export const BookingOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
-  spaceId: 'spaceId',
   bookerEmail: 'bookerEmail',
   bookerPhone: 'bookerPhone',
   bookerFullname: 'bookerFullname',
@@ -296,6 +342,15 @@ export const BookingOrderByRelevanceFieldEnum = {
 } as const
 
 export type BookingOrderByRelevanceFieldEnum = (typeof BookingOrderByRelevanceFieldEnum)[keyof typeof BookingOrderByRelevanceFieldEnum]
+
+
+export const BookingSpaceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  spaceId: 'spaceId'
+} as const
+
+export type BookingSpaceOrderByRelevanceFieldEnum = (typeof BookingSpaceOrderByRelevanceFieldEnum)[keyof typeof BookingSpaceOrderByRelevanceFieldEnum]
 
 
 export const PaymentOrderByRelevanceFieldEnum = {

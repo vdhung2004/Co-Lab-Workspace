@@ -6,8 +6,8 @@ import {
   ILogin,
   ISendPasswordResetEmail,
   IResetPassword,
-} from "../shared/schemas/auth.schema";
-import { IUpdateProfile } from "../shared/schemas/user.schema.js";
+} from "../schemas/auth.schema.js";
+import { IUpdateProfile } from "../schemas/user.schema.js";
 import { hashPassword, comparePassword } from "../utils/hash";
 import { signToken } from "../utils/jwt.js";
 import {

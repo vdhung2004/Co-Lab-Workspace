@@ -4,7 +4,7 @@ import {
   IRegister,
   IResetPassword,
   ISendPasswordResetEmail,
-} from "../shared/schemas/auth.schema";
+} from "../schemas/auth.schema";
 import {
   loginService,
   registerService,

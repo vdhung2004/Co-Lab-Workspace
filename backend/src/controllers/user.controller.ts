@@ -6,7 +6,7 @@ import {
   getAllUsersService,
   updateUserByAdminService,
 } from "../services/user.service.js";
-import { IUpdateProfile } from "../shared/schemas/user.schema.js";
+import { IUpdateProfile } from "../schemas/user.schema.js";
 import { UserRole, UserStatus } from "../types/user.t.js";
 
 export const getProfileController = async (
