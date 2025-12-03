@@ -5,7 +5,7 @@ import {
   resetPasswordController,
   sendPasswordResetEmailController,
   verifyEmailController,
-} from "../controllers/auth.controllert";
+} from "../controllers/auth.controller";
 import { validate } from "../middlewares/validate.middleware";
 import {
   loginSchema,
