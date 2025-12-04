@@ -4,6 +4,9 @@ import cors from "cors";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
 import workspaceRoutes from "./routes/workspace.routes";
+import spaceRoutes from "./routes/space.route";
+import amenityRoutes from "./routes/amenity.route";
+import floorRoutes from "./routes/floor.route";
 
 const app: Application = express();
 
@@ -29,6 +32,9 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes); // Thêm route user ở đây
 app.use("/api/workspace", workspaceRoutes);
+app.use("/api/space", spaceRoutes);
+app.use("/api/amenity", amenityRoutes);
+app.use("/api/floor", floorRoutes);
 
 app.use((err: any, req: Request, res: Response, next: any) => {
   console.error(err.stack);
