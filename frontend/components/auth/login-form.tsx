@@ -13,29 +13,35 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
-export const title = "Login Form";
-
-const formSchema = z.object({
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
+// ------------------ MATCH BACKEND SCHEMA -------------------
+const loginSchema = z.object({
+  email: z.string().email({ message: "Email không hợp lệ" }),
+  password: z.string().min(1, { message: "Mật khẩu không được để trống" }),
 });
 
-const Example = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+export type LoginFormType = z.infer<typeof loginSchema>;
+// ------------------------------------------------------------
+
+const LoginForm = () => {
+  const form = useForm<LoginFormType>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: LoginFormType) {
+    console.log("Login values:", values);
+
+    // Gọi API BE nếu muốn:
+    // const res = await fetch("/api/auth/login", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ body: values }),
+    // });
   }
 
   return (
@@ -43,11 +49,13 @@ const Example = () => {
       <Form {...form}>
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-2 text-center">
-            <h1 className="font-bold text-2xl">Welcome back</h1>
+            <h1 className="font-bold text-2xl">Đăng nhập</h1>
             <p className="text-muted-foreground text-sm">
-              Enter your credentials to access your account
+              Nhập email và mật khẩu của bạn
             </p>
           </div>
+
+          {/* Email */}
           <FormField
             control={form.control}
             name="email"
@@ -56,7 +64,6 @@ const Example = () => {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
-                    className="bg-background"
                     placeholder="you@example.com"
                     type="email"
                     {...field}
@@ -66,25 +73,26 @@ const Example = () => {
               </FormItem>
             )}
           />
+
+          {/* Password */}
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
                 <div className="flex items-center justify-between">
-                  <FormLabel>Password</FormLabel>
-                  <a
+                  <FormLabel>Mật khẩu</FormLabel>
+                  <Link
                     className="text-muted-foreground text-sm hover:underline"
-                    href="#"
+                    href="/forgot-password"
                   >
-                    Forgot password?
-                  </a>
+                    Quên mật khẩu?
+                  </Link>
                 </div>
                 <FormControl>
                   <Input
-                    className="bg-background"
-                    placeholder="Enter your password"
                     type="password"
+                    placeholder="Nhập mật khẩu"
                     {...field}
                   />
                 </FormControl>
@@ -92,14 +100,16 @@ const Example = () => {
               </FormItem>
             )}
           />
+
           <Button className="w-full" type="submit">
-            Sign In
+            Đăng nhập
           </Button>
-          <p className="text-center text-muted-foreground text-sm">
-            Don't have an account?{" "}
-            <a className="hover:underline" href="#">
-              Sign up
-            </a>
+
+          <p className="text-center text-sm text-muted-foreground">
+            Chưa có tài khoản?{" "}
+            <Link className="hover:underline" href="/register">
+              Đăng ký ngay
+            </Link>
           </p>
         </form>
       </Form>
@@ -107,4 +117,4 @@ const Example = () => {
   );
 };
 
-export default Example;
+export default LoginForm;
