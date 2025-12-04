@@ -5,6 +5,9 @@ import { authenticate, authorizeRole } from "../middlewares/auth.middlerware";
 import WorkspaceController from "../controllers/workspace.controller";
 import { validate } from "../middlewares/validate.middleware";
 import { workspaceSchema } from "../schemas/workspace.schema";
+import { FloorController } from "../controllers/floor.controller";
+import { createFloorSchema } from "../schemas/floor.schema";
+import { SpaceController } from "../controllers/space.controller";
 
 const router = Router();
 
@@ -49,5 +52,16 @@ router.put(
   authorizeRole(["admin"]),
   WorkspaceController.deleteImage
 );
+router.get("/:workspaceId/floors", FloorController.getByWorkspace);
+
+router.post(
+  "/:workspaceId/floors",
+  validate(createFloorSchema),
+  authenticate,
+  authorizeRole(["admin"]),
+  FloorController.create
+);
+
+router.get("/:workspaceId/spaces", SpaceController.listByWorkspace);
 
 export default router;

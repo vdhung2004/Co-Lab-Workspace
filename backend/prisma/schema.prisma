@@ -99,7 +99,6 @@ model Workspace {
   createdAt   DateTime        @default(now()) @map("created_at")
 
   floors Floor[] // NEW: quản lý tầng
-  spaces Space[] // UNCHANGED: spaces vẫn FK workspace
   images WorkspaceImage[] // NEW: tách JSON ra bảng riêng
 
   @@map("workspaces")
@@ -138,7 +137,6 @@ model Floor {
 // --------------------
 model Space {
   id          String      @id @default(uuid()) @map("space_id")
-  workspaceId String      @map("workspace_id")
   floorId     String?     @map("floor_id") // NEW: FK floor
   name        String      @db.VarChar(100)
   type        SpaceType
@@ -150,7 +148,6 @@ model Space {
   positionY   Int?        @map("position_y")
   createdAt   DateTime    @default(now()) @map("created_at")
 
-  workspace Workspace      @relation(fields: [workspaceId], references: [id])
   floor     Floor?         @relation(fields: [floorId], references: [id])
   bookings  BookingSpace[] // NEW: N-N booking
   amenities SpaceAmenity[] // UNCHANGED
