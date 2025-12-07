@@ -11,20 +11,16 @@ import { StatusDropdown } from '@/components/admin/bookings/components/statusDro
 // Giả sử chúng ta đang tìm chi tiết booking có ID là '1'
 const BOOKING_ID = '1'; 
 const API_URL = `http://localhost:8000/api/booking/${BOOKING_ID}`; 
-const API_URL_PUT = `http://localhost:8000/api/booking/${BOOKING_ID}`; 
 
 
-const BookingEditableForm: React.FC = () => {
-  // State để lưu dữ liệu gốc từ API
+const BookingEditableForm = () => {
   const [bookingData, setBookingData] = useState<Booking | null>(null);
-  // State để lưu dữ liệu có thể chỉnh sửa của form
   const [formData, setFormData] = useState<Partial<Booking>>({}); 
   const [loading, setLoading] = useState<boolean>(true);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
-  // 1. Fetch Dữ liệu và Khởi tạo Form Data
   useEffect(() => {
     const fetchBookingDetail = async () => {
       try {
@@ -49,12 +45,11 @@ const BookingEditableForm: React.FC = () => {
     fetchBookingDetail();
   }, []);
 
-  // 2. Hàm xử lý thay đổi input
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ 
       ...prev, 
-      [name]: value === '' ? null : value // Xử lý null cho các trường tùy chọn
+      [name]: value === '' ? null : value
     }));
   };
 
@@ -67,7 +62,6 @@ const BookingEditableForm: React.FC = () => {
         }));
     };
   
-  // 3. Hàm xử lý khi nhấn nút Lưu (Gửi dữ liệu lên API)
   const handleSave = async (e: React.FormEvent) => {
       e.preventDefault();
       if (!bookingData) return;
@@ -75,45 +69,7 @@ const BookingEditableForm: React.FC = () => {
       setIsSaving(true);
       setSaveMessage(null);
       
-      // Lấy các trường cần update (ví dụ: booker info)
-      const updatePayload = {
-          bookerFullname: formData.bookerFullname,
-          bookerEmail: formData.bookerEmail,
-          bookerPhone: formData.bookerPhone,
-          cancellationReason: formData.cancellationReason,
-          // Có thể thêm status nếu bạn muốn chỉnh sửa trạng thái ở đây
-      };
-
-      try {
-          // THAY ĐỔI URL VÀ METHOD CHO API CẬP NHẬT (PATCH/PUT)
-          const response = await fetch(API_URL_PUT, {
-              method: 'PUT', 
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(updatePayload),
-          });
-
-          if (!response.ok) {
-              throw new Error(`Cập nhật thất bại: ${response.statusText}`);
-          }
-
-          // Cập nhật lại dữ liệu gốc sau khi lưu thành công
-          const updatedBooking: Booking = await response.json();
-          setBookingData(updatedBooking);
-          setFormData(updatedBooking);
-          setSaveMessage('Lưu thành công!');
-
-      } catch (err) {
-          setSaveMessage(`Lỗi: ${(err as Error).message}`);
-      } finally {
-          setIsSaving(false);
-      }
-  };
-
-  // Hàm tiện ích để format ngày giờ (Giữ nguyên)
-  // const formatDateTime = (isoString: string | undefined) => {
-  //   if (!isoString) return 'N/A';
-  //   return new Date(isoString).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-  // };
+      
 
   if (loading) return <div className="text-center p-8">Đang tải chi tiết đặt chỗ...</div>;
   if (error) return <div className="text-center text-red-500 p-8">Lỗi tải dữ liệu: {error}</div>;
@@ -208,6 +164,6 @@ const BookingEditableForm: React.FC = () => {
       </form>
     </div>
   );
-};
+  }}
 
 export default BookingEditableForm;
