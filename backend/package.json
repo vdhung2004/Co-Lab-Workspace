@@ -43,7 +43,7 @@
     "@types/express": "^5.0.5",
     "@types/node": "^24.10.1",
     "nodemon": "^3.1.11",
-    "prisma": "^7.0.1",
+    "prisma": "^7.1.0",
     "prisma-zod": "^0.1.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
