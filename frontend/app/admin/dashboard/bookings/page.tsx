@@ -1,10 +1,10 @@
-"use client"; // Thêm dòng này nếu bạn đang dùng App Router của Next.js
+"use client"; 
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Booking } from '@/lib/types/booking';
 
-const API_URL = "http://localhost:8000/api/booking"; // Địa chỉ API của bạn
+const API_URL = "http://localhost:8000/api/booking";
 
 const BookingTable: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -20,7 +20,6 @@ const BookingTable: React.FC = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
-        // Giả sử API trả về đối tượng { data: [...] }
         setBookings(result.data || []);
       } catch (e) {
         if (e instanceof Error) {
@@ -47,14 +46,12 @@ const BookingTable: React.FC = () => {
     });
   };
 
-  // 3. Hiển thị trạng thái tải và lỗi
   if (loading) return <p className="text-center p-4">Đang tải dữ liệu...</p>;
   if (error)
     return (
       <p className="text-center text-red-500 p-4">Lỗi tải dữ liệu: {error}</p>
     );
 
-  // 4. Render Table (Tailwind CSS)
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-gray-800">
@@ -90,7 +87,6 @@ const BookingTable: React.FC = () => {
             </tr>
           </thead>
 
-          {/* Nội dung Bảng */}
           <tbody className="bg-white divide-y divide-gray-200">
             {bookings.map((booking) => (
               <tr key={booking.id} className="hover:bg-gray-50">
@@ -116,7 +112,7 @@ const BookingTable: React.FC = () => {
                         ? "bg-green-100 text-green-800"
                         : booking.status === "cancelled"
                         ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800" // pending
+                        : "bg-yellow-100 text-yellow-800" 
                     }`}
                   >
                     {booking.status.toUpperCase()}
@@ -136,7 +132,6 @@ const BookingTable: React.FC = () => {
         </table>
       </div>
 
-      {/* Hiển thị lỗi hủy nếu có (Ví dụ) */}
       {bookings.length > 0 && (
         <div className="mt-6 text-sm text-gray-600">
           <p>
