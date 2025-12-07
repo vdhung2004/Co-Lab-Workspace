@@ -51,6 +51,7 @@ export const verifyEmailController = async (
 ) => {
   try {
     const { token } = req.params;
+    console.log(token);
     await verifyEmailService(token);
     res.status(200).json({ message: "Xác minh email thành công" });
   } catch (err: any) {

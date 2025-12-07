@@ -33,8 +33,11 @@ export const WorkspaceService = {
       skip: (page - 1) * limit,
       take: limit,
       include: {
-        floors: true,
-        spaces: true,
+        floors: {
+          include: {
+            spaces: true,
+          },
+        },
         images: true,
       },
     });
@@ -45,7 +48,11 @@ export const WorkspaceService = {
   getById: async (id: string) => {
     const workspace = await prisma.workspace.findUnique({
       where: { id },
-      include: { floors: true, spaces: true, images: true },
+      include: { floors: {
+        include: {
+          spaces: true
+        }
+      }, images: true },
     });
     return workspace;
   },

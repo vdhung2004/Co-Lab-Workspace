@@ -34,11 +34,18 @@ router.post(
 );
 
 // Admin routes
-router.get("/", authenticate, authorizeRole(["admin"]), getAllUsersController);
+// router.get("/", authenticate, authorizeRole(["admin"]), getAllUsersController);
+router.get("/", getAllUsersController);
+
+// router.put(
+//   "/:userId",
+//   authenticate,
+//   authorizeRole(["admin"]),
+//   updateUserByAdminController
+// );
+
 router.put(
   "/:userId",
-  authenticate,
-  authorizeRole(["admin"]),
   updateUserByAdminController
 );
 

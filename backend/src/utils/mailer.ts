@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
   port: SMTP_PORT,
   // secure: true nếu port là 465 (SSL), false nếu port là 587 (TLS)
-  secure: SMTP_PORT === 465,
+  secure: false,
   auth: {
     user: SMTP_USER,
     pass: SMTP_PASS,
@@ -40,7 +40,7 @@ export const sendVerificationEmail = async (
   fullName: string
 ) => {
   // Tùy chỉnh URL frontend của bạn
-  const verificationLink = `${process.env.CLIENT_URL}/verify?token=${token}`;
+  const verificationLink = `${process.env.CLIENT_URL}/api/auth/verify/${token}`;
 
   await transporter.sendMail({
     from: '"Your App" <no-reply@yourapp.com>',

@@ -7,18 +7,23 @@ import workspaceRoutes from "./routes/workspace.routes";
 import spaceRoutes from "./routes/space.route";
 import amenityRoutes from "./routes/amenity.route";
 import floorRoutes from "./routes/floor.route";
+import bookingRoutes from './routes/booking.route';
 
 const app: Application = express();
 
 const CLIENT_URL: string = process.env.CLIENT_URL || "http://localhost:3000";
 
-app.use(
-  cors({
-    origin: CLIENT_URL, // Cho phép Frontend của bạn truy cập
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    credentials: true, // Nếu bạn sử dụng cookie hoặc Authorization header
-  })
-);
+app.use(cors());
+
+
+// app.use(
+//   cors({
+//     origin: CLIENT_URL, // Cho phép Frontend của bạn truy cập
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+//     credentials: true, // Nếu bạn sử dụng cookie hoặc Authorization header
+//   })
+// );
+
 
 app.use(express.json());
 
@@ -35,6 +40,8 @@ app.use("/api/workspace", workspaceRoutes);
 app.use("/api/space", spaceRoutes);
 app.use("/api/amenity", amenityRoutes);
 app.use("/api/floor", floorRoutes);
+app.use("/api/booking", bookingRoutes);
+
 
 app.use((err: any, req: Request, res: Response, next: any) => {
   console.error(err.stack);
