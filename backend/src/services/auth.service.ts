@@ -37,6 +37,7 @@ export const registerService = async (data: IRegister) => {
       status: "active",
     },
   });
+
   // 5. Gửi email xác minh
   await sendVerificationEmailService(data.email, data.fullName);
   return user;
@@ -100,6 +101,7 @@ export const sendVerificationEmailService = async (
   const verifyToken = uuidv4();
   const verifySentAt = new Date();
   const verifyExpireAt = new Date(verifySentAt.getTime() + 24 * 60 * 60 * 1000); // 24h
+  console.log("Verify token:", verifyToken);
 
   // 2. Cập nhật token vào DB
   await prisma.user.update({
@@ -173,6 +175,10 @@ export const resetPasswordService = async (
   }
   const now = new Date();
   if (!user.resetExpireAt || user.resetExpireAt < now) {
+    console.log("token:", token);
+    console.log("User's resetExpireAt:", user);
+    console.log("Now:", now);
+    console.log("ExpireAt:", user.resetExpireAt);
     throw { status: 400, message: "Token đã hết hạn" };
   }
   const hashedPassword = await hashPassword(data.newPassword);

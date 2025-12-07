@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,43 +15,62 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { loginAPI } from "@/services/auth.service";
+import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
+import { useAuth } from "@/context/auth.context";
+import { useRouter } from "next/navigation";
 
-// ------------------ MATCH BACKEND SCHEMA -------------------
 const loginSchema = z.object({
   email: z.string().email({ message: "Email không hợp lệ" }),
   password: z.string().min(1, { message: "Mật khẩu không được để trống" }),
 });
 
 export type LoginFormType = z.infer<typeof loginSchema>;
-// ------------------------------------------------------------
 
 const LoginForm = () => {
+  const [loading, setLoading] = useState(false);
+  const { setUser } = useAuth();
+  const router = useRouter();
+
   const form = useForm<LoginFormType>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   async function onSubmit(values: LoginFormType) {
-    console.log("Login values:", values);
+    if (loading) return;
+    setLoading(true);
 
-    // Gọi API BE nếu muốn:
-    // const res = await fetch("/api/auth/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ body: values }),
-    // });
+    try {
+      const [result] = await Promise.all([
+        loginAPI(values),
+        new Promise((resolve) => setTimeout(resolve, 1000)),
+      ]);
+
+      if (result.success && result.user) {
+        setUser(result.user);
+        toast.success("Đăng nhập thành công!");
+        router.push("/"); // redirect
+      } else {
+        toast.error(result.message || "Đăng nhập thất bại");
+      }
+    } catch (err) {
+      toast.error("Lỗi mạng hoặc server");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className="w-full max-w-sm">
       <Form {...form}>
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+          {/* Header */}
           <div className="space-y-2 text-center">
-            <h1 className="font-bold text-2xl">Đăng nhập</h1>
-            <p className="text-muted-foreground text-sm">
+            <h1 className="text-2xl font-bold">Đăng nhập</h1>
+            <p className="text-sm text-muted-foreground">
               Nhập email và mật khẩu của bạn
             </p>
           </div>
@@ -83,7 +103,7 @@ const LoginForm = () => {
                 <div className="flex items-center justify-between">
                   <FormLabel>Mật khẩu</FormLabel>
                   <Link
-                    className="text-muted-foreground text-sm hover:underline"
+                    className="text-sm text-muted-foreground hover:underline"
                     href="/forgot-password"
                   >
                     Quên mật khẩu?
@@ -101,10 +121,19 @@ const LoginForm = () => {
             )}
           />
 
-          <Button className="w-full" type="submit">
-            Đăng nhập
+          {/* Button */}
+          <Button className="w-full" type="submit" disabled={loading}>
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <Loader2Icon className="w-4 h-4 mr-2 animate-spin" />
+                Đang đăng nhập...
+              </span>
+            ) : (
+              "Đăng nhập"
+            )}
           </Button>
 
+          {/* Footer */}
           <p className="text-center text-sm text-muted-foreground">
             Chưa có tài khoản?{" "}
             <Link className="hover:underline" href="/register">

@@ -1,4 +1,5 @@
-import { Router } from "express";
+import express from "express";
+
 import { validate } from "../middlewares/validate.middleware";
 
 import { BookingController } from "../controllers/booking.controller";
@@ -6,10 +7,13 @@ import {
   createBookingSchema,
   updateBookingSchema,
 } from "../schemas/booking.schema";
+import { authenticate } from "../middlewares/auth.middlerware";
 
-const router = Router();
+const router = express.Router();
 
 router.get("/", BookingController.getAll);
+
+router.get("/user", authenticate, BookingController.getByUserId);
 router.get("/:id", BookingController.getById);
 
 router.post("/", validate(createBookingSchema), BookingController.create);

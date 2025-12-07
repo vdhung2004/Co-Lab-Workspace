@@ -1,5 +1,5 @@
 // src/middlewares/auth.middleware.ts
-import { Request, Response, NextFunction } from "express";
+import e, { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwt.js";
 import { DecodedUserPayLoad } from "../types/auth.t.js";
 
@@ -10,17 +10,19 @@ export const authenticate = (
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    // Lấy token từ cookie thay vì header
+    const token = req.cookies.token;
+    if (!token) {
       return res.status(401).json({ error: "Bạn cần xác thực" });
     }
 
-    const token = authHeader.split(" ")[1];
     const payload = verifyToken(token) as DecodedUserPayLoad;
-    req.user = payload;
+    req.user = payload; // gán payload cho req.user
     next();
   } catch (err) {
-    res.status(401).json({ error: "Token không hợp lệ" });
+    res
+      .status(401)
+      .json({ error: err instanceof Error ? err.message : "Lỗi xác thực" });
   }
 };
 

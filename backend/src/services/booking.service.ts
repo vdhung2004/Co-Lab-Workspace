@@ -24,6 +24,20 @@ export const BookingService = {
 
     return { total, page, limit, data };
   },
+  // Lấy danh sách booking của 1 user
+  getByUserId: async (userId: string) => {
+    const bookings = await prisma.booking.findMany({
+      where: { userId },
+      include: {
+        user: true,
+        spaces: { include: { space: true } },
+        payment: true,
+      },
+    });
+    console.log("Bookings fetched for userId");
+
+    return { bookings };
+  },
 
   // LẤY CHI TIẾT
   getById: async (id: string) => {
