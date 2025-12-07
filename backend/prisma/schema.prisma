@@ -35,6 +35,12 @@ enum SpaceStatus {
   maintenance
 }
 
+enum FloorStatus {
+  active
+  inactive
+  maintenance
+}
+
 enum BookingStatus {
   pending
   confirmed
@@ -118,13 +124,14 @@ model WorkspaceImage {
 // 3️⃣ FLOORS (NEW)
 // --------------------
 model Floor {
-  id          String   @id @default(uuid()) @map("floor_id")
+  id          String      @id @default(uuid()) @map("floor_id")
   workspaceId String
-  name        String   @db.VarChar(100)
-  imageUrl    String?  @map("image_url") // hình nền tầng
+  name        String      @db.VarChar(100)
+  imageUrl    String?     @map("image_url") // hình nền tầng
   width       Int? // optional, scale map
   height      Int? // optional
-  createdAt   DateTime @default(now()) @map("created_at")
+  status      FloorStatus
+  createdAt   DateTime    @default(now()) @map("created_at")
 
   workspace Workspace @relation(fields: [workspaceId], references: [id])
   spaces    Space[]
@@ -137,7 +144,7 @@ model Floor {
 // --------------------
 model Space {
   id          String      @id @default(uuid()) @map("space_id")
-  floorId     String?     @map("floor_id") // NEW: FK floor
+  floorId     String      @map("floor_id") // NEW: FK floor
   name        String      @db.VarChar(100)
   type        SpaceType
   capacity    Int
@@ -148,7 +155,7 @@ model Space {
   positionY   Int?        @map("position_y")
   createdAt   DateTime    @default(now()) @map("created_at")
 
-  floor     Floor?         @relation(fields: [floorId], references: [id])
+  floor     Floor          @relation(fields: [floorId], references: [id])
   bookings  BookingSpace[] // NEW: N-N booking
   amenities SpaceAmenity[] // UNCHANGED
   images    SpaceImage[] // NEW: tách JSON
@@ -223,12 +230,12 @@ model Booking {
 // 8️⃣ BOOKING_SPACES (NEW)
 // --------------------
 model BookingSpace {
-  id        String        @id @default(uuid()) @map("booking_space_id")
-  bookingId String        @map("booking_id")
-  spaceId   String        @map("space_id")
-  status    BookingStatus
-  booking   Booking       @relation(fields: [bookingId], references: [id])
-  space     Space         @relation(fields: [spaceId], references: [id])
+  id        String  @id @default(uuid()) @map("booking_space_id")
+  bookingId String  @map("booking_id")
+  spaceId   String  @map("space_id")
+  // status    BookingStatus
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  space     Space   @relation(fields: [spaceId], references: [id])
 
   @@map("booking_spaces")
 }

@@ -1,10 +1,20 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { BookingService } from "../services/booking.service";
 
 export const BookingController = {
   getAll: async (req: Request, res: Response) => {
     const data = await BookingService.getAll(req.query);
     res.json(data);
+  },
+
+  getByUserId: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user!.user_id;
+      const { bookings } = await BookingService.getByUserId(userId);
+      res.json({ message: "Lấy danh sách booking thành công", bookings });
+    } catch (err) {
+      next(err);
+    }
   },
 
   getById: async (req: Request, res: Response) => {

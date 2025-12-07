@@ -1,6 +1,7 @@
 import express from "express";
 import {
   loginController,
+  logoutController,
   registerController,
   resetPasswordController,
   sendPasswordResetEmailController,
@@ -25,8 +26,9 @@ router.post(
   sendPasswordResetEmailController
 );
 router.post(
-  "/reset-password/:token",
+  "/reset-password",
   validate(resetPasswordSchema),
   resetPasswordController
 );
+router.post("/logout", logoutController);
 export default router;

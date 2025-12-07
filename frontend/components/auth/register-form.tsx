@@ -14,8 +14,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { registerAPI } from "@/services/auth.service";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Loader2Icon } from "lucide-react";
 
-// ------------------ MATCH BACKEND SCHEMA -------------------
 const phoneRegex = /^(?:\+84|0)\d{9,10}$/;
 
 const registerSchema = z
@@ -53,6 +56,7 @@ export type RegisterFormType = z.infer<typeof registerSchema>;
 // ------------------------------------------------------------
 
 const RegisterForm = () => {
+  const [loading, setLoading] = useState(false);
   const form = useForm<RegisterFormType>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -65,14 +69,24 @@ const RegisterForm = () => {
   });
 
   async function onSubmit(values: RegisterFormType) {
-    console.log("Submit values:", values);
+    if (loading) return;
 
-    // gọi API BE nếu muốn
-    // const res = await fetch("/api/auth/register", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ body: values }),
-    // });
+    setLoading(true);
+    // call api register
+    const [result] = await Promise.all([
+      registerAPI(values),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]);
+
+    setLoading(false);
+
+    if (result.success) {
+      console.log("Đăng ký thành công:", result.user);
+      toast.success(result.message || "Đăng ký thành công!");
+    } else {
+      console.log("Lỗi đăng ký:", result.message);
+      toast.error("Đăng ký thất bại: " + result.message);
+    }
   }
 
   return (
@@ -173,8 +187,15 @@ const RegisterForm = () => {
             )}
           />
 
-          <Button className="w-full" type="submit">
-            Đăng ký
+          <Button className="w-full" type="submit" disabled={loading}>
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <Loader2Icon className="w-4 h-4 mr-2 animate-spin" />
+                Đang đăng ký...
+              </span>
+            ) : (
+              "Đăng ký"
+            )}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">

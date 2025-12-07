@@ -16,7 +16,7 @@ export const getProfileController = async (
 ) => {
   try {
     const user = await getProfileService(req.user!.user_id);
-    res.status(200).json(user);
+    res.status(200).json({ message: "Lấy profile thành công", user });
   } catch (err) {
     next(err);
   }
