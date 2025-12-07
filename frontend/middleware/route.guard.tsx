@@ -22,7 +22,7 @@ export const RouteGuard = ({ children }: RouteGuardProps) => {
       "/reset-password",
     ];
     // Các route cần login
-    const protectedRoutes = ["/dashboard", "/profile", "/admin"];
+    const protectedRoutes = ["/dashboard", "/profile"];
 
     // Chặn guest routes nếu đã login
     if (user && guestRoutes.includes(pathname)) {
@@ -34,15 +34,14 @@ export const RouteGuard = ({ children }: RouteGuardProps) => {
       router.replace("/login");
     }
 
-    // Ví dụ thêm role check cho admin route
-    if (user && pathname.startsWith("/admin") && user.role !== "admin") {
-      router.replace("/unauthorized"); // redirect trang 403
-    }
+    // // Ví dụ thêm role check cho admin route
+    // if (user && pathname.startsWith("/admin") && user.role !== "admin") {
+    //   router.replace("/unauthorized"); // redirect trang 403
+    // }
   }, [user, pathname, router]);
 
   // Nếu chưa login và route protected → return null (không render)
-  if (!user && ["/dashboard", "/profile", "/admin"].includes(pathname))
-    return null;
+  if (!user && ["/dashboard", "/profile"].includes(pathname)) return null;
   // Nếu đã login và đang ở guest route → return null
   if (
     user &&
