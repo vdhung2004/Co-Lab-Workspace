@@ -34,7 +34,6 @@ export const WorkspaceService = {
       take: limit,
       include: {
         floors: true,
-        spaces: true,
         images: true,
       },
     });
@@ -45,8 +44,9 @@ export const WorkspaceService = {
   getById: async (id: string) => {
     const workspace = await prisma.workspace.findUnique({
       where: { id },
-      include: { floors: true, spaces: true, images: true },
+      include: { floors: true, images: true },
     });
+    console.log("Fetched workspace:", workspace);
     return workspace;
   },
   // Tạo mới workspace
@@ -87,53 +87,8 @@ export const WorkspaceService = {
       throw { status: 404, message: "Workspace không tồn tại" };
     }
 
-    // 2. Kiểm tra có booking nào gắn với workspace không
-    const bookingCount = await prisma.booking.count({
-      where: {
-        spaces: {
-          some: {
-            space: {
-              workspaceId: id,
-            },
-          },
-        },
-      },
-    });
-
-    if (bookingCount > 0) {
-      throw {
-        status: 400,
-        message: "Không thể xóa workspace vì đang có booking liên quan",
-      };
-    }
-
     // 3. Xoá theo THỨ TỰ AN TOÀN
     await prisma.$transaction(async (tx) => {
-      // =============================
-      //  3.1 Xóa ảnh của tất cả spaces
-      // =============================
-      await tx.spaceImage.deleteMany({
-        where: {
-          space: { workspaceId: id },
-        },
-      });
-
-      // =============================
-      //  3.2 Xóa amenities của spaces
-      // =============================
-      await tx.spaceAmenity.deleteMany({
-        where: {
-          space: { workspaceId: id },
-        },
-      });
-
-      // =============================
-      //  3.4 Xóa spaces
-      // =============================
-      await tx.space.deleteMany({
-        where: { workspaceId: id },
-      });
-
       // =============================
       //  3.5 Xóa floors
       // =============================
